@@ -1,0 +1,9 @@
+/.idea
+/node_modules
+/out
+/include
+/dist
+/public/dev.lua
+*.rbxm
+*.rbxmx
+/roblox.toml

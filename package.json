@@ -1,0 +1,39 @@
+{
+  "name": "remote-spy",
+  "scripts": {
+    "compile": "npx rbxtsc --verbose --type=model",
+    "watch": "npx rbxtsc -w",
+    "build": "rojo build default.project.json --output \"dist/RemoteSpy.rbxm\"",
+    "serve": "rojo serve place.project.json",
+    "bundle": "npm run build && remodel run ci/bundle-dev.lua dist/RemoteSpy.dev.lua dev",
+    "bundle:prod": "npm run build && remodel run ci/bundle-prod.lua dist/RemoteSpy.dev.lua prod"
+  },
+  "devDependencies": {
+    "@rbxts/compiler-types": "^1.3.3-types.1",
+    "@rbxts/types": "^1.0.607",
+    "@typescript-eslint/eslint-plugin": "^5.23.0",
+    "@typescript-eslint/parser": "^5.23.0",
+    "eslint": "^8.15.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-roblox-ts": "^0.0.32",
+    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
+    "prettier": "^2.6.2",
+    "roblox-ts": "^1.3.3",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "@rbxts/bin": "^1.2.6",
+    "@rbxts/flipper": "^2.0.1",
+    "@rbxts/hax": "github:richie0866/rbxts-hax",
+    "@rbxts/make": "^1.0.6",
+    "@rbxts/object-utils": "^1.0.4",
+    "@rbxts/roact": "^1.4.2-ts.2",
+    "@rbxts/roact-hooked": "^1.2.7",
+    "@rbxts/roact-hooked-plus": "^1.1.1",
+    "@rbxts/roact-rodux-hooked": "^1.0.4",
+    "@rbxts/rodux": "^3.0.0-ts.3",
+    "@rbxts/roselect": "^0.1.1",
+    "@rbxts/services": "^1.2.0"
+  }
+}
