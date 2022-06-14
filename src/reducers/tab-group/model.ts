@@ -6,6 +6,13 @@ export interface TabGroupState {
 export interface TabGroupColumn {
 	id: string;
 	caption: string;
-	icon: string;
+	type: TabType;
 	canClose: boolean;
+}
+
+export enum TabType {
+	Home = "home",
+	Event = "event",
+	Function = "function",
+	Script = "script",
 }

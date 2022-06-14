@@ -1,5 +1,6 @@
 import Roact from "@rbxts/roact";
 import { WindowContext } from "./use-window-context";
+import { lerp } from "utils/number-util";
 import { pure, useBinding, useMemo, useState } from "@rbxts/roact-hooked";
 import { useSpring, useViewportSize } from "@rbxts/roact-hooked-plus";
 
@@ -20,7 +21,7 @@ function Window({ initialSize, initialPosition, [Roact.Children]: children }: Pr
 	const [position, setPosition] = useBinding(initialPositionVec);
 	const [maximized, setMaximized] = useState(false);
 
-	const maximizeAnimation = useSpring(maximized ? 1 : 0, { frequency: 8 });
+	const maximizeAnimation = useSpring(maximized ? 1 : 0, { frequency: 6 });
 
 	return (
 		<WindowContext.Provider value={{ size, setSize, position, setPosition, maximized, setMaximized }}>
@@ -28,14 +29,21 @@ function Window({ initialSize, initialPosition, [Roact.Children]: children }: Pr
 				BackgroundTransparency={1}
 				Size={Roact.joinBindings({ size, viewportSize, maximizeAnimation }).map(
 					({ size, viewportSize, maximizeAnimation }) =>
-						new UDim2(0, size.X, 0, size.Y).Lerp(
-							new UDim2(0, viewportSize.X, 0, viewportSize.Y),
-							maximizeAnimation,
+						new UDim2(
+							0,
+							math.round(lerp(size.X, viewportSize.X, maximizeAnimation)),
+							0,
+							math.round(lerp(size.Y, viewportSize.Y, maximizeAnimation)),
 						),
 				)}
 				Position={Roact.joinBindings({ position, maximizeAnimation }).map(
 					({ position, maximizeAnimation }) =>
-						new UDim2(0, position.X * (1 - maximizeAnimation), 0, position.Y * (1 - maximizeAnimation)),
+						new UDim2(
+							0,
+							math.round(position.X * (1 - maximizeAnimation)),
+							0,
+							math.round(position.Y * (1 - maximizeAnimation)),
+						),
 				)}
 			>
 				<uicorner CornerRadius={new UDim(0, 8)} />

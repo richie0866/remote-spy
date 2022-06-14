@@ -1,17 +1,30 @@
-export function describeFunction(fn: number | Callback): ChunkInfo {
+interface FunctionDescription {
+	name: string;
+	source: string;
+	parameters: number;
+	variadic: boolean;
+}
+
+export function describeFunction(fn: number | Callback): FunctionDescription {
 	if (debug.getinfo) {
-		return debug.getinfo(fn);
+		const info = debug.getinfo(fn);
+		return {
+			name: info.name === "" || info.name === undefined ? "(anonymous)" : info.name,
+			source: info.short_src,
+			parameters: info.numparams ?? 0,
+			variadic: info.is_vararg === 1 ? true : false,
+		};
 	}
+
+	const [name] = debug.info(fn, "n");
+	const [source] = debug.info(fn, "s");
+	const [parameters, variadic] = debug.info(fn, "a");
+
 	return {
-		name: "placeholder",
-		source: "placeholder",
-		short_src: "placeholder",
-		what: "Lua",
-		currentline: math.random(1, 10),
-		nups: 0,
-		numparams: 2,
-		is_vararg: 1,
-		func: typeIs(fn, "number") ? () => {} : fn,
+		name: name === "" || name === undefined ? "(anonymous)" : name,
+		source,
+		parameters,
+		variadic,
 	};
 }
 

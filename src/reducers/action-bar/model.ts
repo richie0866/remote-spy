@@ -1,5 +1,7 @@
 export interface ActionBarState {
 	actions: ActionBarStates;
+	selectedRemoteId?: string;
+	selectedSignalId?: string;
 }
 
 export interface ActionBarStates {

@@ -9,3 +9,7 @@ export function mapStrict(n: number, min0: number, max0: number, min1: number, m
 export function lerp(a: number, b: number, t: number): number {
 	return a + (b - a) * t;
 }
+
+export function multiply(n: number, ...args: number[]): number {
+	return args.reduce((a, b) => 1 - (1 - a) * (1 - b), n);
+}

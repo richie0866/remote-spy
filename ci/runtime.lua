@@ -157,7 +157,7 @@ local function init()
 	end
 	for object in pairs(modules) do
 		if object:IsA("LocalScript") and not object.Disabled then
-			task.spawn(loadModule, object)
+			task.defer(loadModule, object)
 		end
 	end
 end

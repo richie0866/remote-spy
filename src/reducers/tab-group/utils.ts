@@ -1,28 +1,29 @@
-import Roact from "@rbxts/roact";
-import { TabGroupColumn } from "./model";
+import { TabGroupColumn, TabType } from "./model";
+import { TextService } from "@rbxts/services";
 
-export interface TabGroupStyle {
-	font: Roact.InferEnumNames<Enum.Font>;
-	fontSize: number;
-	maxSize: Vector2;
+export const MAX_TAB_CAPTION_WIDTH = 150;
+
+export function createTabColumn(id: string, caption: string, tabType: TabType, canClose = true): TabGroupColumn {
+	return { id, caption, type: tabType, canClose };
 }
 
-export function getTabCaptionWidth(tab: TabGroupColumn, style: TabGroupStyle) {
-	return game.GetService("TextService").GetTextSize(tab.caption, style.fontSize, style.font, style.maxSize).X;
+export function getTabCaptionWidth(tab: TabGroupColumn) {
+	const textSize = TextService.GetTextSize(tab.caption, 11, "Gotham", new Vector2(300, 0));
+	return math.min(textSize.X, MAX_TAB_CAPTION_WIDTH);
 }
 
-export function getTabWidth(tab: TabGroupColumn, style: TabGroupStyle) {
-	const captionWidth = getTabCaptionWidth(tab, style);
-	const iconWidth = tab.icon !== undefined ? 16 + 6 : 0;
+export function getTabWidth(tab: TabGroupColumn) {
+	const captionWidth = getTabCaptionWidth(tab);
+	const iconWidth = 16 + 6;
 	const closeWidth = tab.canClose ? 16 + 6 : 3;
 	return 8 + iconWidth + captionWidth + closeWidth + 8;
 }
 
-export function getTabOffset(tabs: TabGroupColumn[], tab: TabGroupColumn, style: TabGroupStyle) {
+export function getTabOffset(tabs: TabGroupColumn[], tab: TabGroupColumn) {
 	let offset = 0;
 	for (const t of tabs) {
 		if (t === tab) break;
-		offset += getTabWidth(t, style);
+		offset += getTabWidth(t);
 	}
 	return offset;
 }

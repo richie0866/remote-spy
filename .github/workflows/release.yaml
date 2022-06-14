@@ -1,0 +1,43 @@
+name: Publish Release
+
+on:
+  workflow_dispatch:
+  release:
+    types: [ published, prereleased ]
+
+jobs:
+  publish-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        repository: ${{ github.event.repository.full_name }}
+        ref: "master"
+
+    - name: Install Foreman
+      uses: rojo-rbx/setup-foreman@v1.0.1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Install NPM dependencies
+      uses: bahmutov/npm-install@v1.7.4
+
+    - name: Compile roblox-ts
+      run: |
+        npm run compile
+
+    - name: Build model
+      run: |
+        npm run build
+
+    - name: Bundle modules
+      run: |
+        remodel run ci/bundle-prod.lua dist/RemoteSpy.lua ${{ github.event.release.tag_name }}
+        remodel run ci/bundle-dev.lua dist/RemoteSpy.dev.lua ${{ github.event.release.tag_name }}.dev
+
+    - name: Upload to release
+      uses: AButler/upload-release-assets@v2.0
+      with:
+        files: "dist/RemoteSpy.lua;dist/RemoteSpy.dev.lua;dist/RemoteSpy.rbxm"
+        repo-token: ${{ secrets.GITHUB_TOKEN }}

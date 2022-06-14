@@ -1,15 +1,18 @@
 import { RootState } from "reducers";
-import { TabGroupStyle, getTabOffset } from "./utils";
 import { createSelector } from "@rbxts/roselect";
+import { getTabOffset } from "./utils";
 
 export const selectTabGroup = (state: RootState) => state.tabGroup;
 export const selectTabs = (state: RootState) => state.tabGroup.tabs;
-export const selectActiveTab = (state: RootState) => state.tabGroup.activeTab;
+export const selectActiveTabId = (state: RootState) => state.tabGroup.activeTab;
 export const selectTabCount = (state: RootState) => state.tabGroup.tabs.size();
 
 export const selectTab = (state: RootState, id: string) => state.tabGroup.tabs.find((tab) => tab.id === id);
 export const selectTabOrder = (state: RootState, id: string) => state.tabGroup.tabs.findIndex((tab) => tab.id === id);
+export const selectActiveTabOrder = (state: RootState) =>
+	state.tabGroup.tabs.findIndex((tab) => tab.id === state.tabGroup.activeTab);
 export const selectTabIsActive = (state: RootState, id: string) => state.tabGroup.activeTab === id;
+export const selectTabType = (state: RootState, id: string) => selectTab(state, id)?.type;
 
 export const makeSelectTabsBefore = () => {
 	const selectTabsBefore = createSelector([selectTabs, selectTabOrder], (tabs, order) => {
@@ -20,15 +23,12 @@ export const makeSelectTabsBefore = () => {
 };
 
 export const makeSelectTabOffset = () => {
-	const selectTabOffset = createSelector(
-		[makeSelectTabsBefore(), selectTab, (_1, _2, style: TabGroupStyle) => style],
-		(tabs, tab, style) => {
-			if (!tab) {
-				return 0;
-			}
-			return getTabOffset(tabs, tab, style);
-		},
-	);
+	const selectTabOffset = createSelector([makeSelectTabsBefore(), selectTab], (tabs, tab) => {
+		if (!tab) {
+			return 0;
+		}
+		return getTabOffset(tabs, tab);
+	});
 
 	return selectTabOffset;
 };

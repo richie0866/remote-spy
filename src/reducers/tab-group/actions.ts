@@ -29,7 +29,7 @@ export function setActiveTab(id: string) {
 	} as const;
 }
 
-export type TabGroupAction =
+export type TabGroupActions =
 	| ReturnType<typeof pushTab>
 	| ReturnType<typeof deleteTab>
 	| ReturnType<typeof moveTab>
