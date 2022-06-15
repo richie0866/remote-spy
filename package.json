@@ -3,7 +3,7 @@
   "scripts": {
     "compile": "npx rbxtsc --verbose --type=model",
     "watch": "npx rbxtsc -w",
-    "build": "rojo build default.project.json --output \"dist/RemoteSpy.rbxm\"",
+    "build": "mkdir -p dist && rojo build default.project.json --output \"dist/RemoteSpy.rbxm\"",
     "serve": "rojo serve place.project.json",
     "bundle": "npm run build && remodel run ci/bundle-dev.lua dist/RemoteSpy.dev.lua dev",
     "bundle:prod": "npm run build && remodel run ci/bundle-prod.lua dist/RemoteSpy.dev.lua prod"
