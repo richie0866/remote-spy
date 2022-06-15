@@ -13,7 +13,12 @@ export interface RemoteLog {
 
 export interface OutgoingSignal {
 	id: string;
-	args: Record<number, unknown>;
-	caller: Callback;
+	name: string;
+	path: string;
+	pathFmt: string;
+	parameters: Record<number, unknown>;
+	returns?: Record<number, unknown>;
+	caller?: LocalScript | ModuleScript;
+	callback: Callback;
 	traceback: Callback[];
 }

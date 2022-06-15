@@ -1,3 +1,4 @@
+import Button from "components/Button";
 import Container from "components/Container";
 import Roact from "@rbxts/roact";
 import { Instant, Spring } from "@rbxts/flipper";
@@ -20,6 +21,14 @@ interface DragState {
 	tabPosition: number;
 }
 
+const FOREGROUND_ACTIVE = new Instant(0);
+const FOREGROUND_DEFAULT = new Spring(0.4, { frequency: 6 });
+const FOREGROUND_HOVERED = new Spring(0.2, { frequency: 6 });
+
+const CLOSE_DEFAULT = new Spring(1, { frequency: 6 });
+const CLOSE_HOVERED = new Spring(0.9, { frequency: 6 });
+const CLOSE_PRESSED = new Instant(0.94);
+
 function TabColumn({ tab, canvasPosition }: Props) {
 	const store = useRootStore();
 
@@ -35,12 +44,12 @@ function TabColumn({ tab, canvasPosition }: Props) {
 	const close = useDeleteTab(tab.id);
 
 	// Animation
-	const [transparency, setGoal] = useSingleMotor(active ? 0 : 0.4);
-	const [closeTransparency, setCloseGoal] = useSingleMotor(1);
+	const [foreground, setForeground] = useSingleMotor(active ? 0 : 0.4);
+	const [closeBackground, setCloseBackground] = useSingleMotor(1);
 	const offsetAnimation = useSpring(offset, { frequency: 30, dampingRatio: 3 });
 
 	useEffect(() => {
-		active ? setGoal(new Instant(0)) : setGoal(new Spring(0.4, { frequency: 6 }));
+		setForeground(active ? FOREGROUND_ACTIVE : FOREGROUND_DEFAULT);
 	}, [active]);
 
 	// Dragging
@@ -97,42 +106,40 @@ function TabColumn({ tab, canvasPosition }: Props) {
 	}, [dragState]);
 
 	return (
-		<imagebutton
-			Event={{
-				MouseButton1Down: (_, x) => {
-					if (!active) activate();
-					setDragState({
-						dragging: true,
-						mousePosition: x,
-						tabPosition: offset,
-					});
-				},
-				Activated: () => !active && setGoal(new Spring(0.2, { frequency: 6 })),
-				MouseEnter: () => !active && setGoal(new Spring(0.2, { frequency: 6 })),
-				MouseLeave: () => !active && setGoal(new Spring(0.4, { frequency: 6 })),
+		<Button
+			onPress={(_, x) => {
+				if (!active) activate();
+				setDragState({
+					dragging: false,
+					mousePosition: x,
+					tabPosition: offset,
+				});
 			}}
-			Image="rbxassetid://9896472554"
-			ImageTransparency={active ? 0.7 : 1}
-			ImageColor3={Color3.fromHex("#424242")}
-			ScaleType="Slice"
-			SliceCenter={new Rect(8, 8, 8, 8)}
-			Size={new UDim2(0, width, 1, 0)}
-			Position={Roact.joinBindings({ dragPosition, offsetAnimation }).map(
-				(binding) =>
-					new UDim2(
-						0,
-						binding.dragPosition !== undefined
-							? math.max(binding.dragPosition, 0)
-							: math.round(binding.offsetAnimation),
-						0,
-						0,
-					),
-			)}
-			ZIndex={dragPosition.map((drag) => (drag !== undefined ? 1 : 0))}
-			BackgroundTransparency={1}
-			Active={true}
-			AutoButtonColor={false}
+			onClick={() => !active && setForeground(FOREGROUND_HOVERED)}
+			onHover={() => !active && setForeground(FOREGROUND_HOVERED)}
+			onLeave={() => !active && setForeground(FOREGROUND_DEFAULT)}
+			size={new UDim2(0, width, 1, 0)}
+			position={Roact.joinBindings({ dragPosition, offsetAnimation }).map((binding) => {
+				const xOffset =
+					binding.dragPosition !== undefined
+						? math.max(binding.dragPosition, 0)
+						: math.round(binding.offsetAnimation);
+
+				return new UDim2(0, xOffset, 0, 0);
+			})}
+			zIndex={dragPosition.map((drag) => (drag !== undefined ? 1 : 0))}
 		>
+			{/* Selection background */}
+			<imagelabel
+				Image="rbxassetid://9896472554"
+				ImageTransparency={active ? 0.7 : 1}
+				ImageColor3={Color3.fromHex("#424242")}
+				Size={new UDim2(1, 0, 1, 0)}
+				BackgroundTransparency={1}
+				ScaleType="Slice"
+				SliceCenter={new Rect(8, 8, 8, 8)}
+			/>
+
 			{/* Round out border */}
 			<imagelabel
 				Image="rbxassetid://9896472759"
@@ -152,17 +159,20 @@ function TabColumn({ tab, canvasPosition }: Props) {
 			/>
 
 			<Container>
+				{/* Icon */}
 				<imagelabel
 					Image={tabIcons[tab.type]}
-					ImageTransparency={transparency}
+					ImageTransparency={foreground}
 					Size={new UDim2(0, 16, 0, 16)}
 					BackgroundTransparency={1}
 				/>
+
+				{/* Caption */}
 				<textlabel
 					Text={tab.caption}
 					Font="Gotham"
 					TextColor3={new Color3(1, 1, 1)}
-					TextTransparency={transparency}
+					TextTransparency={foreground}
 					TextSize={11}
 					TextXAlignment="Left"
 					TextYAlignment="Center"
@@ -181,27 +191,28 @@ function TabColumn({ tab, canvasPosition }: Props) {
 						/>
 					)}
 				</textlabel>
+
+				{/* Close button */}
 				{tab.canClose && (
-					<imagebutton
-						Event={{
-							Activated: () => {
-								deleteTab(tab.id);
-								close();
-							},
-							MouseButton1Down: () => setCloseGoal(new Instant(0.9)),
-							MouseEnter: () => setCloseGoal(new Spring(0.85, { frequency: 6 })),
-							MouseLeave: () => setCloseGoal(new Spring(1, { frequency: 6 })),
+					<Button
+						onClick={() => {
+							deleteTab(tab.id);
+							close();
 						}}
-						Image="rbxassetid://9896553856"
-						ImageTransparency={transparency}
-						BackgroundColor3={new Color3(1, 1, 1)}
-						BackgroundTransparency={closeTransparency}
-						AutoButtonColor={false}
-						Size={new UDim2(0, 16, 0, 16)}
-						BorderSizePixel={0}
+						onPress={() => setCloseBackground(CLOSE_PRESSED)}
+						onHover={() => setCloseBackground(CLOSE_HOVERED)}
+						onLeave={() => setCloseBackground(CLOSE_DEFAULT)}
+						transparency={closeBackground}
+						size={new UDim2(0, 17, 0, 17)}
+						cornerRadius={new UDim(0, 4)}
 					>
-						<uicorner CornerRadius={new UDim(0, 4)} />
-					</imagebutton>
+						<imagelabel
+							Image="rbxassetid://9896553856"
+							ImageTransparency={foreground}
+							Size={new UDim2(0, 16, 0, 16)}
+							BackgroundTransparency={1}
+						/>
+					</Button>
 				)}
 				<uipadding
 					PaddingLeft={new UDim(0, 8)}
@@ -216,7 +227,7 @@ function TabColumn({ tab, canvasPosition }: Props) {
 					VerticalAlignment="Center"
 				/>
 			</Container>
-		</imagebutton>
+		</Button>
 	);
 }
 

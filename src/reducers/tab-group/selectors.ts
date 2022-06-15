@@ -6,6 +6,7 @@ export const selectTabGroup = (state: RootState) => state.tabGroup;
 export const selectTabs = (state: RootState) => state.tabGroup.tabs;
 export const selectActiveTabId = (state: RootState) => state.tabGroup.activeTab;
 export const selectTabCount = (state: RootState) => state.tabGroup.tabs.size();
+export const selectActiveTab = (state: RootState) => selectTab(state, state.tabGroup.activeTab);
 
 export const selectTab = (state: RootState, id: string) => state.tabGroup.tabs.find((tab) => tab.id === id);
 export const selectTabOrder = (state: RootState, id: string) => state.tabGroup.tabs.findIndex((tab) => tab.id === id);

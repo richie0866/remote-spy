@@ -28,7 +28,7 @@ export default function ActionBar() {
 
 				<ActionLine />
 
-				<ActionButton id="find" icon="rbxassetid://9887697255" caption="Find remote" />
+				<ActionButton id="traceback" icon="rbxassetid://9887697255" caption="Traceback" />
 				<ActionButton id="copyPath" icon="rbxassetid://9887697099" caption="Copy as path" />
 
 				<uilistlayout

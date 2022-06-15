@@ -2,18 +2,19 @@ import App from "./App";
 import Roact from "@rbxts/roact";
 import { Provider } from "@rbxts/roact-rodux-hooked";
 import { configureStore } from "store";
-import { createOutgoingSignal, createRemoteLog, pushRemoteLog } from "reducers/remote-log";
+import { createOutgoingSignal, createRemoteLog, pushOutgoingSignal, pushRemoteLog } from "reducers/remote-log";
+import { getInstanceId } from "utils/instance-util";
 import { pure } from "@rbxts/roact-hooked";
 import { useRootDispatch } from "hooks/use-root-store";
 
 const rng = new Random();
 
-function exampleFn() {}
-function exampleCaller_1() {
-	exampleFn();
+function testFn(x?: number, y?: number) {}
+function testFnCaller(x?: number, ...args: number[]) {
+	testFn();
 }
-function exampleCaller_2() {
-	exampleCaller_1();
+function topLevelCaller(x?: number, y?: number, z?: number) {
+	testFnCaller();
 }
 
 const Dispatcher = pure(() => {
@@ -35,7 +36,6 @@ const Dispatcher = pure(() => {
 
 	for (const name of names) {
 		const className = rng.NextInteger(0, 1) === 1 ? "RemoteEvent" : "RemoteFunction";
-
 		const remote = {
 			Name: name,
 			Parent: game.GetService("ReplicatedStorage"),
@@ -47,14 +47,25 @@ const Dispatcher = pure(() => {
 			},
 		} as unknown as RemoteEvent;
 
-		const firstSignal = createOutgoingSignal([12, "Hello", true], exampleFn, [
-			exampleFn,
-			exampleCaller_1,
-			exampleCaller_2,
-		]);
-		const remoteLog = createRemoteLog(remote, rng.NextInteger(0, 2) === 1 ? firstSignal : undefined);
+		dispatch(pushRemoteLog(createRemoteLog(remote)));
 
-		dispatch(pushRemoteLog(remoteLog));
+		const max = rng.NextInteger(-3, 30);
+		for (let i = 0; i < max; i++) {
+			if (i < 0) break;
+			const signal = createOutgoingSignal(
+				remote,
+				undefined,
+				testFn,
+				[testFn, testFnCaller, topLevelCaller],
+				[
+					"Hello",
+					rng.NextInteger(100, 1000),
+					{ message: "Hello, world!", receivers: [] },
+					game.GetService("Workspace"),
+				],
+			);
+			dispatch(pushOutgoingSignal(getInstanceId(remote), signal));
+		}
 	}
 
 	return <></>;

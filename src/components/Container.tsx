@@ -4,13 +4,15 @@ export interface Props extends Roact.PropsWithChildren {
 	size?: UDim2 | Roact.Binding<UDim2>;
 	position?: UDim2 | Roact.Binding<UDim2>;
 	anchorPoint?: Vector2 | Roact.Binding<Vector2>;
-	clipChildren?: boolean;
+	order?: number | Roact.Binding<number>;
+	clipChildren?: boolean | Roact.Binding<boolean>;
 }
 
 export default function Container({
 	size = new UDim2(1, 0, 1, 0),
 	position,
 	anchorPoint,
+	order,
 	clipChildren,
 	[Roact.Children]: children,
 }: Props) {
@@ -19,6 +21,7 @@ export default function Container({
 			Size={size}
 			Position={position}
 			AnchorPoint={anchorPoint}
+			LayoutOrder={order}
 			ClipsDescendants={clipChildren}
 			BackgroundTransparency={1}
 		>

@@ -7,14 +7,19 @@ import SidePanel from "components/SidePanel";
 import TabGroup from "components/TabGroup";
 import Traceback from "components/Traceback";
 import Window from "components/Window";
+import { activateAction } from "reducers/action-bar";
+import { pure } from "@rbxts/roact-hooked";
+import { useRootDispatch } from "hooks/use-root-store";
 
-export default function MainWindow() {
+function MainWindow() {
+	const dispatch = useRootDispatch();
+
 	return (
 		<Root>
 			<Window.Root initialSize={new UDim2(0, 1080, 0, 700)} initialPosition={new UDim2(0.5, -540, 0.5, -350)}>
 				<Window.DropShadow />
 				<Window.Background background={Color3.fromHex("#202020")} transparency={0}>
-					<uigradient Transparency={new NumberSequence(0.03, 0.1)} Rotation={90} />
+					<uigradient Transparency={new NumberSequence(0.02, 0.05)} Rotation={90} />
 				</Window.Background>
 
 				<ActionBar />
@@ -26,7 +31,8 @@ export default function MainWindow() {
 				<PageGroup />
 
 				<Window.TitleBar
-					caption='<font color="#FFFFFF">RemoteSpy</font>    <font color="#B2B2B2">ScriptWare</font>'
+					onClose={() => dispatch(activateAction("close"))}
+					caption='<font color="#FFFFFF">RemoteSpy</font>    <font color="#B2B2B2">0866</font>'
 					captionTransparency={0.1}
 					icon="rbxassetid://9886981409"
 				/>
@@ -35,3 +41,5 @@ export default function MainWindow() {
 		</Root>
 	);
 }
+
+export default pure(MainWindow);

@@ -1,9 +1,8 @@
 import Container from "components/Container";
-import Event from "./components/Event";
-import Function from "./components/Function";
-import Home from "./components/Home";
+import Home from "./Home";
+import Logger from "./Logger";
 import Roact from "@rbxts/roact";
-import Script from "./components/Script";
+import Script from "./Script";
 import { Instant, Spring } from "@rbxts/flipper";
 import { TabType, selectActiveTabId, selectActiveTabOrder, selectTabOrder, selectTabType } from "reducers/tab-group";
 import { pure, useEffect, useMutable } from "@rbxts/roact-hooked";
@@ -42,10 +41,8 @@ function Page({ id }: Props) {
 
 	return (
 		<Container position={side.map((s) => new UDim2(s, 0, 0, 0))}>
-			{tabType === TabType.Event ? (
-				<Event />
-			) : tabType === TabType.Function ? (
-				<Function />
+			{tabType === TabType.Event || tabType === TabType.Function ? (
+				<Logger id={id} />
 			) : tabType === TabType.Home ? (
 				<Home pageSelected={activeTabId === id} />
 			) : tabType === TabType.Script ? (

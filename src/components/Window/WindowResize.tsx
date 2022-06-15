@@ -1,3 +1,4 @@
+import Button from "components/Button";
 import Container from "components/Container";
 import Roact from "@rbxts/roact";
 import { UserInputService } from "@rbxts/services";
@@ -17,15 +18,12 @@ interface DragState {
 }
 
 const Handle = (props: { size: UDim2; position: UDim2; dragStart: (mouse: Vector2) => void }) => (
-	<textbutton
-		Event={{ MouseButton1Down: (_, x, y) => props.dragStart(new Vector2(x, y)) }}
-		AnchorPoint={new Vector2(0.5, 0.5)}
-		Size={props.size}
-		Position={props.position}
-		Text=""
-		Active={false}
-		AutoButtonColor={false}
-		BackgroundTransparency={1}
+	<Button
+		onPress={(_, x, y) => props.dragStart(new Vector2(x, y))}
+		anchorPoint={new Vector2(0.5, 0.5)}
+		size={props.size}
+		position={props.position}
+		active={false}
 	/>
 );
 

@@ -1,3 +1,4 @@
+import Button from "components/Button";
 import Roact from "@rbxts/roact";
 import { Instant, Spring } from "@rbxts/flipper";
 import { pure } from "@rbxts/roact-hooked";
@@ -9,39 +10,21 @@ interface Props {
 	toggleHidden: () => void;
 }
 
-function TitleBar({ caption, hidden, toggleHidden }: Props) {
-	const [transparency, setGoal] = useGroupMotor([1, 0]);
+const CHEVRON_DEFAULT = [new Spring(1, { frequency: 6 }), new Spring(0, { frequency: 6 })];
+const CHEVRON_HOVERED = [new Spring(0.95, { frequency: 6 }), new Spring(0, { frequency: 6 })];
+const CHEVRON_PRESSED = [new Instant(0.97), new Instant(0.2)];
 
-	const backgroundTransparency = transparency.map((t) => t[0]);
-	const foregroundTransparency = transparency.map((t) => t[1]);
+function TitleBar({ caption, hidden, toggleHidden }: Props) {
+	const [chevronTransparency, setChevronGoal] = useGroupMotor([1, 0]);
+	const chevronBackgroundTransparency = chevronTransparency.map((t) => t[0]);
+	const chevronForegroundTransparency = chevronTransparency.map((t) => t[1]);
 
 	return (
 		<>
-			<textbutton
-				Event={{
-					Activated: () => {
-						setGoal([new Spring(0.92, { frequency: 6 }), new Spring(0, { frequency: 6 })]);
-						toggleHidden();
-					},
-					MouseButton1Down: () => setGoal([new Instant(0.96), new Instant(0.2)]),
-					MouseEnter: () => setGoal([new Spring(0.92, { frequency: 6 }), new Spring(0, { frequency: 6 })]),
-					MouseLeave: () => setGoal([new Spring(1, { frequency: 6 }), new Spring(0, { frequency: 6 })]),
-				}}
-				BackgroundColor3={new Color3(1, 1, 1)}
-				BackgroundTransparency={backgroundTransparency}
-				BorderSizePixel={0}
-				Size={new UDim2(1, -10, 0, 5 * 2 + 20)}
-				Position={new UDim2(0, 5, 0, 5)}
-				Text=""
-				AutoButtonColor={false}
-			>
-				<uicorner CornerRadius={new UDim(0, 4)} />
-			</textbutton>
-
+			{/* Caption */}
 			<textlabel
 				Text={caption}
 				TextColor3={new Color3(1, 1, 1)}
-				TextTransparency={foregroundTransparency}
 				Font="GothamBold"
 				TextSize={11}
 				TextXAlignment="Left"
@@ -51,14 +34,29 @@ function TitleBar({ caption, hidden, toggleHidden }: Props) {
 				BackgroundTransparency={1}
 			/>
 
-			<imagelabel
-				Image={hidden ? "rbxassetid://9888526164" : "rbxassetid://9888526348"}
-				ImageTransparency={foregroundTransparency}
-				BackgroundTransparency={1}
-				Size={new UDim2(0, 16, 0, 16)}
-				Position={new UDim2(1, -12, 0, 12)}
-				AnchorPoint={new Vector2(1)}
-			/>
+			{/* Chevron */}
+			<Button
+				onClick={() => {
+					setChevronGoal(CHEVRON_HOVERED);
+					toggleHidden();
+				}}
+				onPress={() => setChevronGoal(CHEVRON_PRESSED)}
+				onHover={() => setChevronGoal(CHEVRON_HOVERED)}
+				onLeave={() => setChevronGoal(CHEVRON_DEFAULT)}
+				transparency={chevronBackgroundTransparency}
+				size={new UDim2(0, 24, 0, 24)}
+				position={new UDim2(1, -8, 0, 8)}
+				anchorPoint={new Vector2(1, 0)}
+				cornerRadius={new UDim(0, 4)}
+			>
+				<imagelabel
+					Image={hidden ? "rbxassetid://9888526164" : "rbxassetid://9888526348"}
+					ImageTransparency={chevronForegroundTransparency}
+					Size={new UDim2(0, 16, 0, 16)}
+					Position={new UDim2(0, 4, 0, 4)}
+					BackgroundTransparency={1}
+				/>
+			</Button>
 		</>
 	);
 }

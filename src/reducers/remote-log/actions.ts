@@ -16,8 +16,13 @@ export function removeOutgoingSignal(id: string, signalId: string) {
 	return { type: "REMOVE_OUTGOING_SIGNAL", id, signalId } as const;
 }
 
+export function clearOutgoingSignals(id: string) {
+	return { type: "CLEAR_OUTGOING_SIGNALS", id } as const;
+}
+
 export type RemoteLogActions =
 	| ReturnType<typeof pushRemoteLog>
 	| ReturnType<typeof removeRemoteLog>
 	| ReturnType<typeof pushOutgoingSignal>
-	| ReturnType<typeof removeOutgoingSignal>;
+	| ReturnType<typeof removeOutgoingSignal>
+	| ReturnType<typeof clearOutgoingSignals>;

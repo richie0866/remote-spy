@@ -7,12 +7,10 @@ const initialState: RemoteLogState = {
 
 export default function remoteLogReducer(state = initialState, action: RemoteLogActions): RemoteLogState {
 	switch (action.type) {
-		case "PUSH_REMOTE_LOG": {
-			const logs = table.clone(state.logs);
-			logs.push(action.log);
-			logs.sort((a, b) => a.object.Name < b.object.Name);
-			return { logs };
-		}
+		case "PUSH_REMOTE_LOG":
+			return {
+				logs: [...state.logs, action.log],
+			};
 		case "REMOVE_REMOTE_LOG":
 			return {
 				logs: state.logs.filter((log) => log.id !== action.id),
@@ -21,9 +19,13 @@ export default function remoteLogReducer(state = initialState, action: RemoteLog
 			return {
 				logs: state.logs.map((log) => {
 					if (log.id === action.id) {
+						const outgoing = [action.signal, ...log.outgoing];
+						if (outgoing.size() > 256) {
+							outgoing.pop();
+						}
 						return {
 							...log,
-							outgoing: [...log.outgoing, action.signal],
+							outgoing,
 						};
 					}
 					return log;
@@ -36,6 +38,18 @@ export default function remoteLogReducer(state = initialState, action: RemoteLog
 						return {
 							...log,
 							outgoing: log.outgoing.filter((signal) => signal.id !== action.signalId),
+						};
+					}
+					return log;
+				}),
+			};
+		case "CLEAR_OUTGOING_SIGNALS":
+			return {
+				logs: state.logs.map((log) => {
+					if (log.id === action.id) {
+						return {
+							...log,
+							outgoing: [],
 						};
 					}
 					return log;

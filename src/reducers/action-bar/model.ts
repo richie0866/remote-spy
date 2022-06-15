@@ -5,11 +5,12 @@ export interface ActionBarState {
 }
 
 export interface ActionBarStates {
+	close: ActionState;
 	navigatePrevious: ActionState;
 	navigateNext: ActionState;
 	copy: ActionState;
 	delete: ActionState;
-	find: ActionState;
+	traceback: ActionState;
 	copyPath: ActionState;
 }
 

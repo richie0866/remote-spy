@@ -11,10 +11,7 @@ export = (target: Frame) => {
 			>
 				<Window.DropShadow />
 				<Window.Background />
-				<Window.TitleBar
-					caption='<font color="#E5E5E5">RemoteSpy</font>   <font color="#9D9D9D">ScriptWare</font>'
-					icon="rbxassetid://9886981409"
-				/>
+				<Window.TitleBar caption='<font color="#E5E5E5">New window</font>' icon="rbxassetid://9886981409" />
 				<Window.Resize minSize={new Vector2(350, 250)} />
 			</Window.Root>
 		</Root>,

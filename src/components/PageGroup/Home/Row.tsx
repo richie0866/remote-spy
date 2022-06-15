@@ -1,30 +1,51 @@
+import Button from "components/Button";
 import Roact from "@rbxts/roact";
 import { Instant, Spring } from "@rbxts/flipper";
 import { TabType, createTabColumn, pushTab, selectTab, setActiveTab } from "reducers/tab-group";
+import { getDisplayPath } from "utils/instance-util";
+import {
+	makeSelectRemoteLogObject,
+	makeSelectRemoteLogOutgoing,
+	makeSelectRemoteLogType,
+} from "reducers/remote-log/selectors";
 import { multiply } from "utils/number-util";
-import { pure, useCallback, useMutable } from "@rbxts/roact-hooked";
-import { selectRemoteLog } from "reducers/remote-log/selectors";
+import { pure, useCallback, useMemo, useMutable } from "@rbxts/roact-hooked";
 import { useGroupMotor, useSpring } from "@rbxts/roact-hooked-plus";
 import { useRootSelector, useRootStore } from "hooks/use-root-store";
 
 interface Props {
 	id: string;
+	order: number;
 	selected: boolean;
 	onClick: () => void;
 }
 
-function Remote({ onClick, id, selected }: Props) {
+const ROW_DEFAULT = [new Spring(1, { frequency: 6 }), new Spring(0, { frequency: 6 })];
+const ROW_HOVERED = [new Spring(0.95, { frequency: 6 }), new Spring(0, { frequency: 6 })];
+const ROW_PRESSED = [new Instant(0.97), new Instant(0.2)];
+
+function Row({ onClick, id, order, selected }: Props) {
 	const store = useRootStore();
-	const logger = useRootSelector((state) => selectRemoteLog(state, id));
+
+	const selectType = useMemo(makeSelectRemoteLogType, []);
+	const remoteType = useRootSelector((state) => selectType(state, id));
+
+	const selectObject = useMemo(makeSelectRemoteLogObject, []);
+	const remoteObject = useRootSelector((state) => selectObject(state, id));
+
+	const selectOutgoing = useMemo(makeSelectRemoteLogOutgoing, []);
+	const outgoing = useRootSelector((state) => selectOutgoing(state, id));
 
 	const [transparency, setGoal] = useGroupMotor([1, 0]);
 	const backgroundTransparency = transparency.map((t) => t[0]);
 	const foregroundTransparency = transparency.map((t) => t[1]);
-	const highlightTransparency = useSpring(selected ? 0.95 : 1, { frequency: 6 });
+
+	const highlight = useSpring(selected ? 0.95 : 1, { frequency: 6 });
+	const yOffset = useSpring(order * (64 + 4), { frequency: 6 });
 
 	const lastClickTime = useMutable(0);
 	const openOnDoubleClick = useCallback(() => {
-		if (!logger) return;
+		if (!remoteObject) return;
 
 		const now = tick();
 
@@ -36,7 +57,7 @@ function Remote({ onClick, id, selected }: Props) {
 		lastClickTime.current = now;
 
 		if (selectTab(store.getState(), id) === undefined) {
-			const tab = createTabColumn(id, logger.object.Name, logger.type);
+			const tab = createTabColumn(id, remoteObject.Name, remoteType!);
 			store.dispatch(pushTab(tab));
 		}
 
@@ -44,43 +65,37 @@ function Remote({ onClick, id, selected }: Props) {
 		return true;
 	}, [id]);
 
-	if (!logger) {
+	if (!remoteObject) {
 		return <></>;
 	}
 
 	return (
-		<textbutton
-			Event={{
-				Activated: () => {
-					setGoal([new Spring(0.95, { frequency: 6 }), new Spring(0, { frequency: 6 })]);
-					if (!openOnDoubleClick() || selected) {
-						onClick();
-					}
-				},
-				MouseButton1Down: () => setGoal([new Instant(0.97), new Instant(0.2)]),
-				MouseEnter: () => setGoal([new Spring(0.95, { frequency: 6 }), new Spring(0, { frequency: 6 })]),
-				MouseLeave: () => setGoal([new Spring(1, { frequency: 6 }), new Spring(0, { frequency: 6 })]),
+		<Button
+			onClick={() => {
+				setGoal(ROW_HOVERED);
+				(!openOnDoubleClick() || selected) && onClick();
 			}}
-			Size={new UDim2(1, 0, 0, 64)}
-			BackgroundColor3={new Color3(1, 1, 1)}
-			BackgroundTransparency={backgroundTransparency}
-			Text=""
-			AutoButtonColor={false}
+			onPress={() => setGoal(ROW_PRESSED)}
+			onHover={() => setGoal(ROW_HOVERED)}
+			onLeave={() => setGoal(ROW_DEFAULT)}
+			size={new UDim2(1, 0, 0, 64)}
+			position={yOffset.map((y) => new UDim2(0, 0, 0, y))}
+			transparency={backgroundTransparency}
+			cornerRadius={new UDim(0, 4)}
+			layoutOrder={order}
 		>
-			<uicorner CornerRadius={new UDim(0, 4)} />
-
 			{/* Selection highlight */}
 			<frame
 				Size={new UDim2(1, 0, 1, 0)}
 				BackgroundColor3={new Color3(1, 1, 1)}
-				BackgroundTransparency={highlightTransparency}
+				BackgroundTransparency={highlight}
 			>
 				<uicorner CornerRadius={new UDim(0, 4)} />
 			</frame>
 
 			{/* Icon */}
 			<imagelabel
-				Image={logger.type === TabType.Event ? "rbxassetid://9904941486" : "rbxassetid://9904941685"}
+				Image={remoteType === TabType.Event ? "rbxassetid://9904941486" : "rbxassetid://9904941685"}
 				ImageTransparency={foregroundTransparency}
 				Size={new UDim2(0, 24, 0, 24)}
 				Position={new UDim2(0, 18, 0, 20)}
@@ -89,11 +104,7 @@ function Remote({ onClick, id, selected }: Props) {
 
 			{/* Name */}
 			<textlabel
-				Text={
-					logger.outgoing.size() > 0
-						? `${logger.object.Name} • ${logger.outgoing.size()} outgoing`
-						: logger.object.Name
-				}
+				Text={outgoing && outgoing.size() > 0 ? `${remoteObject.Name} • ${outgoing.size()}` : remoteObject.Name}
 				Font="Gotham"
 				TextColor3={new Color3(1, 1, 1)}
 				TextTransparency={foregroundTransparency}
@@ -117,7 +128,7 @@ function Remote({ onClick, id, selected }: Props) {
 
 			{/* Path */}
 			<textlabel
-				Text={logger.object.GetFullName()}
+				Text={getDisplayPath(remoteObject)}
 				Font="Gotham"
 				TextColor3={new Color3(1, 1, 1)}
 				TextTransparency={foregroundTransparency.map((t) => multiply(t, 0.2))}
@@ -139,17 +150,17 @@ function Remote({ onClick, id, selected }: Props) {
 				/>
 			</textlabel>
 
-			{/* Right Caret */}
+			{/* Right chevron */}
 			<imagelabel
-				Image="rbxassetid://9905659174"
+				Image="rbxassetid://9913448173"
 				ImageTransparency={foregroundTransparency}
 				AnchorPoint={new Vector2(1, 0)}
 				Size={new UDim2(0, 16, 0, 16)}
 				Position={new UDim2(1, -18, 0, 24)}
 				BackgroundTransparency={1}
 			/>
-		</textbutton>
+		</Button>
 	);
 }
 
-export default pure(Remote);
+export default pure(Row);

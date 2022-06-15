@@ -3,11 +3,12 @@ import { ActionBarState } from "./model";
 
 const initialState: ActionBarState = {
 	actions: {
+		close: { id: "close", disabled: false, active: false },
 		navigatePrevious: { id: "navigatePrevious", disabled: true, active: false },
 		navigateNext: { id: "navigateNext", disabled: false, active: false },
 		copy: { id: "copy", disabled: true, active: false },
 		delete: { id: "delete", disabled: true, active: false },
-		find: { id: "find", disabled: false, active: false },
+		traceback: { id: "traceback", disabled: false, active: false },
 		copyPath: { id: "copyPath", disabled: false, active: false },
 	},
 	selectedRemoteId: "",

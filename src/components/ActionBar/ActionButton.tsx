@@ -1,3 +1,4 @@
+import Button from "components/Button";
 import Roact from "@rbxts/roact";
 import { ActionBarStates, activateAction, selectActionById } from "reducers/action-bar";
 import { Instant, Spring } from "@rbxts/flipper";
@@ -7,6 +8,9 @@ import { useGroupMotor } from "@rbxts/roact-hooked-plus";
 import { useRootDispatch, useRootSelector } from "hooks/use-root-store";
 
 const MARGIN = 10;
+const BUTTON_DEFAULT = [new Spring(1, { frequency: 6 }), new Spring(0, { frequency: 6 })];
+const BUTTON_HOVERED = [new Spring(0.94, { frequency: 6 }), new Spring(0, { frequency: 6 })];
+const BUTTON_PRESSED = [new Instant(0.96), new Instant(0.2)];
 
 interface Props {
 	id: keyof ActionBarStates;
@@ -29,27 +33,19 @@ function ActionButton({ id, icon, caption }: Props) {
 	}, [caption]);
 
 	return (
-		<textbutton
-			Event={{
-				Activated: () => {
-					setGoal([new Spring(0.94, { frequency: 6 }), new Spring(0, { frequency: 6 })]);
-					if (!actionState.disabled && !actionState.active) {
-						dispatch(activateAction(id));
-					}
-				},
-				MouseButton1Down: () => setGoal([new Instant(0.96), new Instant(0.2)]),
-				MouseEnter: () => setGoal([new Spring(0.94, { frequency: 6 }), new Spring(0, { frequency: 6 })]),
-				MouseLeave: () => setGoal([new Spring(1, { frequency: 6 }), new Spring(0, { frequency: 6 })]),
+		<Button
+			onClick={() => {
+				setGoal(BUTTON_HOVERED);
+				!actionState.disabled && !actionState.active && dispatch(activateAction(id));
 			}}
-			Active={!actionState.disabled}
-			Size={new UDim2(0, caption !== undefined ? textSize.X + 16 + MARGIN * 3 : 36, 0, 36)}
-			BackgroundColor3={new Color3(1, 1, 1)}
-			BackgroundTransparency={backgroundTransparency}
-			Text=""
-			AutoButtonColor={false}
+			onPress={() => setGoal(BUTTON_PRESSED)}
+			onHover={() => setGoal(BUTTON_HOVERED)}
+			onLeave={() => setGoal(BUTTON_DEFAULT)}
+			active={!actionState.disabled}
+			size={new UDim2(0, caption !== undefined ? textSize.X + 16 + MARGIN * 3 : 36, 0, 36)}
+			transparency={backgroundTransparency}
+			cornerRadius={new UDim(0, 4)}
 		>
-			<uicorner CornerRadius={new UDim(0, 4)} />
-
 			{/* Icon */}
 			<imagelabel
 				Image={icon}
@@ -75,7 +71,7 @@ function ActionButton({ id, icon, caption }: Props) {
 					BackgroundTransparency={1}
 				/>
 			)}
-		</textbutton>
+		</Button>
 	);
 }
 
