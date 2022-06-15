@@ -3,7 +3,7 @@ name: Publish Release
 on:
   workflow_dispatch:
   release:
-    types: [ published, prereleased ]
+    types: [ published ]
 
 jobs:
   publish-release:
