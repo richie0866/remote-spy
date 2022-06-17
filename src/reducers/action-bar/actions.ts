@@ -1,10 +1,10 @@
 import { ActionBarStates } from "./model";
 
-export function setActionDisabled(id: keyof ActionBarStates, disabled: boolean) {
+export function setActionEnabled(id: keyof ActionBarStates, enabled: boolean) {
 	return {
-		type: "SET_ACTION_DISABLED",
+		type: "SET_ACTION_ENABLED",
 		id,
-		disabled,
+		enabled,
 	} as const;
 }
 
@@ -22,23 +22,7 @@ export function deactivateAction(id: keyof ActionBarStates) {
 	} as const;
 }
 
-export function setSelectedRemoteId(remoteId?: string) {
-	return {
-		type: "SET_SELECTED_REMOTE_ID",
-		remoteId,
-	} as const;
-}
-
-export function setSelectedSignalId(signalId?: string) {
-	return {
-		type: "SET_SELECTED_SIGNAL_ID",
-		signalId,
-	} as const;
-}
-
 export type ActionBarActions =
-	| ReturnType<typeof setActionDisabled>
+	| ReturnType<typeof setActionEnabled>
 	| ReturnType<typeof activateAction>
-	| ReturnType<typeof deactivateAction>
-	| ReturnType<typeof setSelectedRemoteId>
-	| ReturnType<typeof setSelectedSignalId>;
+	| ReturnType<typeof deactivateAction>;

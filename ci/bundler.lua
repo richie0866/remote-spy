@@ -1,6 +1,5 @@
-local ROJO_INPUT = "dist/RemoteSpy.rbxm"
+local ROJO_INPUT = "RemoteSpy.rbxm"
 local RUNTIME_FILE = "ci/runtime.lua"
-local BUNDLE_TEMP = "ci/bundle.tmp"
 
 ---Configuration settings for the current project.
 ---@class Options
@@ -100,7 +99,6 @@ return function (opt)
 	end
 
 	-- Write to file
-	remodel.createDirAll(string.match(options.output, "^(.*)[/\\]"))
 	remodel.writeFile(options.output, table.concat(output, "\n\n"))
 
 	print("[CI " .. options.version .. "] Bundle written to " .. options.output)

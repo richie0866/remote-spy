@@ -27,7 +27,7 @@ const Dispatcher = pure(() => {
 		"GetEnumerator",
 		"ToString",
 		"RequestStoreState",
-		"ReallyLongNameForSomeReasonToMakeSureItFitsInTheList",
+		"ReallyLongNameForSomeReason \n ☆*: .｡. o(≧▽≦)o .｡.:*☆ \n Lol",
 		"PurchaseProduct",
 		"IsMessaging",
 		"TestDispatcher",
@@ -38,6 +38,7 @@ const Dispatcher = pure(() => {
 		const className = rng.NextInteger(0, 1) === 1 ? "RemoteEvent" : "RemoteFunction";
 		const remote = {
 			Name: name,
+			ClassName: className,
 			Parent: game.GetService("ReplicatedStorage"),
 			IsA(name: string) {
 				return className === name;
@@ -61,6 +62,7 @@ const Dispatcher = pure(() => {
 					"Hello",
 					rng.NextInteger(100, 1000),
 					{ message: "Hello, world!", receivers: [] },
+					rng.NextInteger(100, 1000),
 					game.GetService("Workspace"),
 				],
 			);

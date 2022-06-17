@@ -2,10 +2,11 @@ import Button from "components/Button";
 import Roact from "@rbxts/roact";
 import { Instant, Spring } from "@rbxts/flipper";
 import { OutgoingSignal } from "reducers/remote-log";
-import { describeFunction } from "utils/function-util";
-import { getDisplayPath } from "utils/instance-util";
+import { formatEscapes } from "utils/format-escapes";
+import { getInstancePath } from "utils/instance-util";
 import { multiply } from "utils/number-util";
-import { pure, useMemo } from "@rbxts/roact-hooked";
+import { pure } from "@rbxts/roact-hooked";
+import { stringifyFunctionSignature } from "utils/function-util";
 import { useGroupMotor } from "@rbxts/roact-hooked-plus";
 
 interface Props {
@@ -28,8 +29,6 @@ const captionTransparency = new NumberSequence([
 ]);
 
 function RowHeader({ signal, open, onClick }: Props) {
-	const callbackDescription = useMemo(() => describeFunction(signal.callback), []);
-
 	const [rowTransparency, setRowTransparency] = useGroupMotor([0.97, 0]);
 	const rowButton = {
 		background: rowTransparency.map((t) => t[0]),
@@ -44,7 +43,7 @@ function RowHeader({ signal, open, onClick }: Props) {
 			}}
 			onPress={() => setRowTransparency(rowSprings.pressed)}
 			onHover={() => setRowTransparency(rowSprings.hovered)}
-			onLeave={() => setRowTransparency(open ? rowSprings.defaultOpen : rowSprings.default)}
+			onHoverEnd={() => setRowTransparency(open ? rowSprings.defaultOpen : rowSprings.default)}
 			size={new UDim2(1, 0, 0, 64)}
 		>
 			{/* Background */}
@@ -69,7 +68,9 @@ function RowHeader({ signal, open, onClick }: Props) {
 
 			{/* Source name and line number */}
 			<textlabel
-				Text={`${signal.caller ? signal.caller.Name : "No script"} • ${callbackDescription.name}()`}
+				Text={`${
+					signal.caller ? formatEscapes(signal.caller.Name) : "No script"
+				} • ${stringifyFunctionSignature(signal.callback)}`}
 				Font="Gotham"
 				TextColor3={new Color3(1, 1, 1)}
 				TextTransparency={rowButton.foreground}
@@ -85,7 +86,7 @@ function RowHeader({ signal, open, onClick }: Props) {
 
 			{/* Source path */}
 			<textlabel
-				Text={signal.caller ? getDisplayPath(signal.caller) : "Not called from a script"}
+				Text={signal.caller ? formatEscapes(getInstancePath(signal.caller)) : "Not called from a script"}
 				Font="Gotham"
 				TextColor3={new Color3(1, 1, 1)}
 				TextTransparency={rowButton.foreground.map((t) => multiply(t, 0.2))}

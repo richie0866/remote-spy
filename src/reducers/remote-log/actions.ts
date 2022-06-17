@@ -20,9 +20,24 @@ export function clearOutgoingSignals(id: string) {
 	return { type: "CLEAR_OUTGOING_SIGNALS", id } as const;
 }
 
+export function setRemoteSelected(id?: string) {
+	return { type: "SET_REMOTE_SELECTED", id } as const;
+}
+
+export function setSignalSelected(remote: string, id?: string) {
+	return { type: "SET_SIGNAL_SELECTED", remote, id } as const;
+}
+
+export function toggleSignalSelected(remote: string, id: string) {
+	return { type: "TOGGLE_SIGNAL_SELECTED", remote, id } as const;
+}
+
 export type RemoteLogActions =
 	| ReturnType<typeof pushRemoteLog>
 	| ReturnType<typeof removeRemoteLog>
 	| ReturnType<typeof pushOutgoingSignal>
 	| ReturnType<typeof removeOutgoingSignal>
-	| ReturnType<typeof clearOutgoingSignals>;
+	| ReturnType<typeof clearOutgoingSignals>
+	| ReturnType<typeof setRemoteSelected>
+	| ReturnType<typeof setSignalSelected>
+	| ReturnType<typeof toggleSignalSelected>;

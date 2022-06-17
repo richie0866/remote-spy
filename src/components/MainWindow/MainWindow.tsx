@@ -23,12 +23,13 @@ function MainWindow() {
 				</Window.Background>
 
 				<ActionBar />
+				<TabGroup />
+				<PageGroup />
+
 				<SidePanel.Root>
 					<Traceback />
 					<FunctionTree />
 				</SidePanel.Root>
-				<TabGroup />
-				<PageGroup />
 
 				<Window.TitleBar
 					onClose={() => dispatch(activateAction("close"))}

@@ -14,35 +14,32 @@ const apply = (v2: Vector2, udim: UDim2) =>
 
 function Window({ initialSize, initialPosition, [Roact.Children]: children }: Props) {
 	const viewportSize = useViewportSize();
-	const initialSizeVec = useMemo(() => apply(viewportSize.getValue(), initialSize), []);
-	const initialPositionVec = useMemo(() => apply(viewportSize.getValue(), initialPosition), []);
 
-	const [size, setSize] = useBinding(initialSizeVec);
-	const [position, setPosition] = useBinding(initialPositionVec);
+	const [size, setSize] = useBinding(apply(viewportSize.getValue(), initialSize));
+	const [position, setPosition] = useBinding(apply(viewportSize.getValue(), initialPosition));
 	const [maximized, setMaximized] = useState(false);
-
-	const maximizeAnimation = useSpring(maximized ? 1 : 0, { frequency: 6 });
+	const maximizeAnim = useSpring(maximized ? 1 : 0, { frequency: 6 });
 
 	return (
 		<WindowContext.Provider value={{ size, setSize, position, setPosition, maximized, setMaximized }}>
 			<frame
 				BackgroundTransparency={1}
-				Size={Roact.joinBindings({ size, viewportSize, maximizeAnimation }).map(
-					({ size, viewportSize, maximizeAnimation }) =>
+				Size={Roact.joinBindings({ size, viewportSize, maximizeAnim }).map(
+					({ size, viewportSize, maximizeAnim }) =>
 						new UDim2(
 							0,
-							math.round(lerp(size.X, viewportSize.X, maximizeAnimation)),
+							math.round(lerp(size.X, viewportSize.X, maximizeAnim)),
 							0,
-							math.round(lerp(size.Y, viewportSize.Y, maximizeAnimation)),
+							math.round(lerp(size.Y, viewportSize.Y, maximizeAnim)),
 						),
 				)}
-				Position={Roact.joinBindings({ position, maximizeAnimation }).map(
-					({ position, maximizeAnimation }) =>
+				Position={Roact.joinBindings({ position, maximizeAnim }).map(
+					({ position, maximizeAnim }) =>
 						new UDim2(
 							0,
-							math.round(position.X * (1 - maximizeAnimation)),
+							math.round(position.X * (1 - maximizeAnim)),
 							0,
-							math.round(position.Y * (1 - maximizeAnimation)),
+							math.round(position.Y * (1 - maximizeAnim)),
 						),
 				)}
 			>

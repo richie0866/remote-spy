@@ -1,8 +1,10 @@
+import Container from "components/Container";
 import Header from "./Header";
 import Roact from "@rbxts/roact";
 import Row from "./Row";
+import Selection from "components/Selection";
 import { arrayToMap } from "@rbxts/roact-hooked-plus";
-import { makeSelectRemoteLogOutgoing } from "reducers/remote-log/selectors";
+import { makeSelectRemoteLogOutgoing, selectSignalIdSelected } from "reducers/remote-log";
 import { pure, useBinding, useMemo } from "@rbxts/roact-hooked";
 import { useRootSelector } from "hooks/use-root-store";
 
@@ -12,7 +14,13 @@ interface Props {
 
 function Logger({ id }: Props) {
 	const selectOutgoing = useMemo(makeSelectRemoteLogOutgoing, []);
+
 	const outgoing = useRootSelector((state) => selectOutgoing(state, id));
+	const selection = useRootSelector(selectSignalIdSelected);
+	const selectionOrder = useMemo(
+		() => outgoing?.findIndex((signal) => signal.id === selection) ?? -1,
+		[outgoing, selection],
+	);
 
 	const [contentHeight, setContentHeight] = useBinding(0);
 
@@ -29,19 +37,32 @@ function Logger({ id }: Props) {
 			BorderSizePixel={0}
 			BackgroundTransparency={1}
 		>
-			<Header id={id} />
-			{arrayToMap(outgoing, (signal, order) => [signal.id, <Row signal={signal} order={order} />])}
-
-			<uilistlayout
-				Change={{
-					AbsoluteContentSize: (rbx) => setContentHeight(rbx.AbsoluteContentSize.Y),
-				}}
-				SortOrder="LayoutOrder"
-				FillDirection="Vertical"
-				Padding={new UDim(0, 4)}
-				VerticalAlignment="Top"
-			/>
 			<uipadding PaddingLeft={new UDim(0, 12)} PaddingRight={new UDim(0, 12)} PaddingTop={new UDim(0, 12)} />
+
+			<Selection
+				height={64}
+				offset={selection !== undefined && selectionOrder !== -1 ? (selectionOrder + 1) * (64 + 4) : undefined}
+				hasSelection={selection !== undefined && selectionOrder !== -1}
+			/>
+
+			<Container>
+				<uilistlayout
+					Change={{
+						AbsoluteContentSize: (rbx) => setContentHeight(rbx.AbsoluteContentSize.Y),
+					}}
+					SortOrder="LayoutOrder"
+					FillDirection="Vertical"
+					Padding={new UDim(0, 4)}
+					VerticalAlignment="Top"
+				/>
+
+				<Header id={id} />
+
+				{arrayToMap(outgoing, (signal, order) => [
+					signal.id,
+					<Row signal={signal} order={order} selected={selection === signal.id} />,
+				])}
+			</Container>
 		</scrollingframe>
 	);
 }

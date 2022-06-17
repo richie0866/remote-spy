@@ -4,6 +4,7 @@ import Roact from "@rbxts/roact";
 import { Instant, Spring } from "@rbxts/flipper";
 import { MAX_TAB_CAPTION_WIDTH, TabGroupColumn, deleteTab, getTabCaptionWidth, getTabWidth } from "reducers/tab-group";
 import { RunService, UserInputService } from "@rbxts/services";
+import { formatEscapes } from "utils/format-escapes";
 import { pure, useBinding, useEffect, useMemo, useState } from "@rbxts/roact-hooked";
 import { tabIcons } from "./constants";
 import { useDeleteTab, useMoveTab, useSetActiveTab, useTabIsActive, useTabOffset, useTabWidth } from "./use-tab-group";
@@ -46,7 +47,7 @@ function TabColumn({ tab, canvasPosition }: Props) {
 	// Animation
 	const [foreground, setForeground] = useSingleMotor(active ? 0 : 0.4);
 	const [closeBackground, setCloseBackground] = useSingleMotor(1);
-	const offsetAnimation = useSpring(offset, { frequency: 30, dampingRatio: 3 });
+	const offsetAnim = useSpring(offset, { frequency: 30, dampingRatio: 3 });
 
 	useEffect(() => {
 		setForeground(active ? FOREGROUND_ACTIVE : FOREGROUND_DEFAULT);
@@ -117,13 +118,13 @@ function TabColumn({ tab, canvasPosition }: Props) {
 			}}
 			onClick={() => !active && setForeground(FOREGROUND_HOVERED)}
 			onHover={() => !active && setForeground(FOREGROUND_HOVERED)}
-			onLeave={() => !active && setForeground(FOREGROUND_DEFAULT)}
+			onHoverEnd={() => !active && setForeground(FOREGROUND_DEFAULT)}
 			size={new UDim2(0, width, 1, 0)}
-			position={Roact.joinBindings({ dragPosition, offsetAnimation }).map((binding) => {
+			position={Roact.joinBindings({ dragPosition, offsetAnim }).map((binding) => {
 				const xOffset =
 					binding.dragPosition !== undefined
 						? math.max(binding.dragPosition, 0)
-						: math.round(binding.offsetAnimation);
+						: math.round(binding.offsetAnim);
 
 				return new UDim2(0, xOffset, 0, 0);
 			})}
@@ -169,7 +170,7 @@ function TabColumn({ tab, canvasPosition }: Props) {
 
 				{/* Caption */}
 				<textlabel
-					Text={tab.caption}
+					Text={formatEscapes(tab.caption)}
 					Font="Gotham"
 					TextColor3={new Color3(1, 1, 1)}
 					TextTransparency={foreground}
@@ -201,7 +202,7 @@ function TabColumn({ tab, canvasPosition }: Props) {
 						}}
 						onPress={() => setCloseBackground(CLOSE_PRESSED)}
 						onHover={() => setCloseBackground(CLOSE_HOVERED)}
-						onLeave={() => setCloseBackground(CLOSE_DEFAULT)}
+						onHoverEnd={() => setCloseBackground(CLOSE_DEFAULT)}
 						transparency={closeBackground}
 						size={new UDim2(0, 17, 0, 17)}
 						cornerRadius={new UDim(0, 4)}

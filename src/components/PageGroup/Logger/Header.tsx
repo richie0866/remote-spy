@@ -1,10 +1,11 @@
 import Button from "components/Button";
 import Roact from "@rbxts/roact";
 import { Instant, Spring } from "@rbxts/flipper";
-import { RemoteLog, clearOutgoingSignals } from "reducers/remote-log";
 import { TabType } from "reducers/tab-group";
-import { getDisplayPath } from "utils/instance-util";
-import { makeSelectRemoteLogObject, makeSelectRemoteLogType } from "reducers/remote-log/selectors";
+import { clearOutgoingSignals } from "reducers/remote-log";
+import { formatEscapes } from "utils/format-escapes";
+import { getInstancePath } from "utils/instance-util";
+import { makeSelectRemoteLogObject, makeSelectRemoteLogType } from "reducers/remote-log";
 import { pure, useMemo } from "@rbxts/roact-hooked";
 import { useGroupMotor } from "@rbxts/roact-hooked-plus";
 import { useRootDispatch, useRootSelector } from "hooks/use-root-store";
@@ -60,7 +61,7 @@ function Header({ id }: Props) {
 				}}
 				onPress={() => setDeleteTransparency(deleteSprings.pressed)}
 				onHover={() => setDeleteTransparency(deleteSprings.hovered)}
-				onLeave={() => setDeleteTransparency(deleteSprings.default)}
+				onHoverEnd={() => setDeleteTransparency(deleteSprings.default)}
 				anchorPoint={new Vector2(1, 0)}
 				size={new UDim2(0, 94, 0, 28)}
 				position={new UDim2(1, -18, 0, 18)}
@@ -92,7 +93,7 @@ function Header({ id }: Props) {
 
 			{/* Name */}
 			<textlabel
-				Text={remoteObject ? remoteObject.Name : "Unknown"}
+				Text={remoteObject ? formatEscapes(remoteObject.Name) : "Unknown"}
 				Font="Gotham"
 				TextColor3={new Color3(1, 1, 1)}
 				TextSize={13}
@@ -107,7 +108,7 @@ function Header({ id }: Props) {
 
 			{/* Path */}
 			<textlabel
-				Text={remoteObject ? getDisplayPath(remoteObject) : "Unknown"}
+				Text={remoteObject ? formatEscapes(getInstancePath(remoteObject)) : "Unknown"}
 				Font="Gotham"
 				TextColor3={new Color3(1, 1, 1)}
 				TextTransparency={0.2}

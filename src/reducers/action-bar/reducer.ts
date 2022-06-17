@@ -7,24 +7,23 @@ const initialState: ActionBarState = {
 		navigatePrevious: { id: "navigatePrevious", disabled: true, active: false },
 		navigateNext: { id: "navigateNext", disabled: false, active: false },
 		copy: { id: "copy", disabled: true, active: false },
+		save: { id: "save", disabled: true, active: false },
 		delete: { id: "delete", disabled: true, active: false },
 		traceback: { id: "traceback", disabled: false, active: false },
 		copyPath: { id: "copyPath", disabled: false, active: false },
 	},
-	selectedRemoteId: "",
-	selectedSignalId: "",
 };
 
 export default function actionBarReducer(state = initialState, action: ActionBarActions): ActionBarState {
 	switch (action.type) {
-		case "SET_ACTION_DISABLED":
+		case "SET_ACTION_ENABLED":
 			return {
 				...state,
 				actions: {
 					...state.actions,
 					[action.id]: {
 						...state.actions[action.id],
-						disabled: action.disabled,
+						disabled: !action.enabled,
 					},
 				},
 			};
@@ -49,16 +48,6 @@ export default function actionBarReducer(state = initialState, action: ActionBar
 						active: false,
 					},
 				},
-			};
-		case "SET_SELECTED_REMOTE_ID":
-			return {
-				...state,
-				selectedRemoteId: action.remoteId,
-			};
-		case "SET_SELECTED_SIGNAL_ID":
-			return {
-				...state,
-				selectedSignalId: action.signalId,
 			};
 		default:
 			return state;

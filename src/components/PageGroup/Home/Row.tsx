@@ -2,12 +2,9 @@ import Button from "components/Button";
 import Roact from "@rbxts/roact";
 import { Instant, Spring } from "@rbxts/flipper";
 import { TabType, createTabColumn, pushTab, selectTab, setActiveTab } from "reducers/tab-group";
-import { getDisplayPath } from "utils/instance-util";
-import {
-	makeSelectRemoteLogObject,
-	makeSelectRemoteLogOutgoing,
-	makeSelectRemoteLogType,
-} from "reducers/remote-log/selectors";
+import { formatEscapes } from "utils/format-escapes";
+import { getInstancePath } from "utils/instance-util";
+import { makeSelectRemoteLogObject, makeSelectRemoteLogOutgoing, makeSelectRemoteLogType } from "reducers/remote-log";
 import { multiply } from "utils/number-util";
 import { pure, useCallback, useMemo, useMutable } from "@rbxts/roact-hooked";
 import { useGroupMotor, useSpring } from "@rbxts/roact-hooked-plus";
@@ -77,7 +74,7 @@ function Row({ onClick, id, order, selected }: Props) {
 			}}
 			onPress={() => setGoal(ROW_PRESSED)}
 			onHover={() => setGoal(ROW_HOVERED)}
-			onLeave={() => setGoal(ROW_DEFAULT)}
+			onHoverEnd={() => setGoal(ROW_DEFAULT)}
 			size={new UDim2(1, 0, 0, 64)}
 			position={yOffset.map((y) => new UDim2(0, 0, 0, y))}
 			transparency={backgroundTransparency}
@@ -104,7 +101,9 @@ function Row({ onClick, id, order, selected }: Props) {
 
 			{/* Name */}
 			<textlabel
-				Text={outgoing && outgoing.size() > 0 ? `${remoteObject.Name} • ${outgoing.size()}` : remoteObject.Name}
+				Text={formatEscapes(
+					outgoing && outgoing.size() > 0 ? `${remoteObject.Name} • ${outgoing.size()}` : remoteObject.Name,
+				)}
 				Font="Gotham"
 				TextColor3={new Color3(1, 1, 1)}
 				TextTransparency={foregroundTransparency}
@@ -128,7 +127,7 @@ function Row({ onClick, id, order, selected }: Props) {
 
 			{/* Path */}
 			<textlabel
-				Text={getDisplayPath(remoteObject)}
+				Text={formatEscapes(getInstancePath(remoteObject))}
 				Font="Gotham"
 				TextColor3={new Color3(1, 1, 1)}
 				TextTransparency={foregroundTransparency.map((t) => multiply(t, 0.2))}

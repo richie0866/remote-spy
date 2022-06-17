@@ -9,18 +9,21 @@ export default function remoteLogReducer(state = initialState, action: RemoteLog
 	switch (action.type) {
 		case "PUSH_REMOTE_LOG":
 			return {
+				...state,
 				logs: [...state.logs, action.log],
 			};
 		case "REMOVE_REMOTE_LOG":
 			return {
+				...state,
 				logs: state.logs.filter((log) => log.id !== action.id),
 			};
 		case "PUSH_OUTGOING_SIGNAL":
 			return {
+				...state,
 				logs: state.logs.map((log) => {
 					if (log.id === action.id) {
 						const outgoing = [action.signal, ...log.outgoing];
-						if (outgoing.size() > 256) {
+						if (outgoing.size() > 80) {
 							outgoing.pop();
 						}
 						return {
@@ -33,6 +36,7 @@ export default function remoteLogReducer(state = initialState, action: RemoteLog
 			};
 		case "REMOVE_OUTGOING_SIGNAL":
 			return {
+				...state,
 				logs: state.logs.map((log) => {
 					if (log.id === action.id) {
 						return {
@@ -45,6 +49,7 @@ export default function remoteLogReducer(state = initialState, action: RemoteLog
 			};
 		case "CLEAR_OUTGOING_SIGNALS":
 			return {
+				...state,
 				logs: state.logs.map((log) => {
 					if (log.id === action.id) {
 						return {
@@ -55,6 +60,26 @@ export default function remoteLogReducer(state = initialState, action: RemoteLog
 					return log;
 				}),
 			};
+		case "SET_REMOTE_SELECTED":
+			return {
+				...state,
+				remoteSelected: action.id,
+			};
+		case "SET_SIGNAL_SELECTED":
+			return {
+				...state,
+				signalSelected: action.id,
+				remoteForSignalSelected: action.id !== undefined ? action.remote : undefined,
+			};
+		case "TOGGLE_SIGNAL_SELECTED": {
+			const signalSelected = state.signalSelected === action.id ? undefined : action.id;
+
+			return {
+				...state,
+				signalSelected,
+				remoteForSignalSelected: signalSelected !== undefined ? action.remote : undefined,
+			};
+		}
 		default:
 			return state;
 	}

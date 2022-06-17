@@ -31,3 +31,18 @@ export function describeFunction(fn: number | Callback): FunctionDescription {
 export function getFunctionScript(fn: number | Callback): LocalScript | ModuleScript | undefined {
 	return rawget(getfenv(fn as number), "script") as never;
 }
+
+export function stringifyFunctionSignature(fn: number | Callback) {
+	const description = describeFunction(fn);
+	const params = [];
+
+	for (let i = 0; i < description.parameters; i++) {
+		params.push(string.char(string.byte("A")[0] + i));
+	}
+
+	if (description.variadic) {
+		params.push("...");
+	}
+
+	return `${description.name}(${params.join(", ")})`;
+}

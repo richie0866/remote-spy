@@ -3,7 +3,7 @@
 /out
 /include
 /dist
-/public/dev.lua
+/*.dev.lua
 *.rbxm
 *.rbxmx
 /roblox.toml

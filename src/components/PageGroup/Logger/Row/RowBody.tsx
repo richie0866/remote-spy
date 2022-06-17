@@ -2,77 +2,40 @@ import Roact from "@rbxts/roact";
 import RowCaption from "./RowCaption";
 import RowDoubleCaption from "./RowDoubleCaption";
 import RowLine from "./RowLine";
-import { HttpService } from "@rbxts/services";
-import { OutgoingSignal } from "reducers/remote-log";
-import { describeFunction } from "utils/function-util";
-import { pure, useCallback, useMemo } from "@rbxts/roact-hooked";
+import { OutgoingSignal, stringifySignalTraceback } from "reducers/remote-log";
+import { codify } from "utils/codify";
+import { describeFunction, stringifyFunctionSignature } from "utils/function-util";
+import { formatEscapes } from "utils/format-escapes";
+import { pure, useMemo } from "@rbxts/roact-hooked";
 
 interface Props {
 	signal: OutgoingSignal;
 }
 
+function stringifyTypesAndValues(list: Record<number, unknown>) {
+	const types = [];
+	const values = [];
+
+	for (const [index, value] of pairs(list)) {
+		if (index > 12) {
+			types.push("...");
+			values.push("...");
+			break;
+		}
+		types.push(typeOf(value));
+		values.push(formatEscapes(codify(value, -1).sub(1, 256)));
+	}
+
+	return [types, values] as const;
+}
+
 function RowBody({ signal }: Props) {
 	const description = useMemo(() => describeFunction(signal.callback), []);
-
-	const tracebackNames = useMemo(() => {
-		const mapped = signal.traceback.map((traceback) => {
-			const description = describeFunction(traceback);
-			const params = [];
-
-			for (let i = 0; i < description.parameters; i++) {
-				params.push(string.char(string.byte("A")[0] + i));
-			}
-
-			if (description.variadic) {
-				params.push("...");
-			}
-
-			return `${description.name}(${params.join(", ")})`;
-		});
-		const length = mapped.size();
-
-		// Reverse order so that the remote caller is last.
-		for (let i = 0; i < length / 2; i++) {
-			const temp = mapped[i];
-			mapped[i] = mapped[length - i - 1];
-			mapped[length - i - 1] = temp;
-		}
-
-		// Highlight the remote caller.
-		mapped[length - 1] = `→ ${mapped[length - 1]} ←`;
-
-		return mapped;
-	}, []);
-
-	const stringifyTypesAndValues = useCallback((list: Record<number, unknown>) => {
-		const types = [];
-		const values = [];
-
-		for (const [index, value] of pairs(list)) {
-			if (index > 12) {
-				types.push("...");
-				break;
-			}
-			types.push(typeOf(value));
-		}
-
-		for (const [, value] of pairs(list)) {
-			if (typeIs(value, "string")) {
-				values.push(string.format("%q", value));
-			} else if (typeIs(value, "table")) {
-				const result = opcall(() => HttpService.JSONEncode(value));
-				values.push(result.success ? result.value : "Could not encode JSON");
-			} else {
-				values.push(tostring(value));
-			}
-		}
-
-		return [types, values];
-	}, []);
+	const tracebackNames = useMemo(() => stringifySignalTraceback(signal), []);
 
 	const [parameterTypes, parameterValues] = useMemo(() => stringifyTypesAndValues(signal.parameters), []);
 	const [returnTypes, returnValues] = useMemo(
-		() => (signal.returns ? stringifyTypesAndValues(signal.returns) : []),
+		() => (signal.returns ? stringifyTypesAndValues(signal.returns) : [["void"], ["void"]]),
 		[],
 	);
 
@@ -87,8 +50,8 @@ function RowBody({ signal }: Props) {
 				BackgroundTransparency={0.98}
 				BorderSizePixel={0}
 			>
-				<RowCaption text="Remote name" description={signal.name} wrapped />
-				<RowCaption text="Remote location" description={signal.path} wrapped />
+				<RowCaption text="Remote name" description={formatEscapes(signal.name)} wrapped />
+				<RowCaption text="Remote location" description={formatEscapes(signal.path)} wrapped />
 
 				<uipadding
 					PaddingLeft={new UDim(0, 58)}
@@ -146,9 +109,9 @@ function RowBody({ signal }: Props) {
 				Size={new UDim2(1, 0, 0, 0)}
 				BackgroundTransparency={1}
 			>
-				<RowCaption text="Function name" description={description.name} wrapped />
+				<RowCaption text="Signature" description={stringifyFunctionSignature(signal.callback)} wrapped />
 				<RowCaption text="Source" description={description.source} wrapped />
-				<RowCaption text="Traceback" wrapped description={"• " + tracebackNames.join("\n• ")} />
+				<RowCaption text="Traceback" wrapped description={tracebackNames.join("\n")} />
 
 				<uipadding
 					PaddingLeft={new UDim(0, 58)}

@@ -44,8 +44,8 @@ export default function RowDoubleCaption({ text, hint, description }: Props) {
 				TextSize={11}
 				TextTransparency={0.3}
 				AutomaticSize="Y"
-				Size={new UDim2(1, -114 - 64, 0, 0)}
-				Position={new UDim2(0, 114 + 64, 0, 0)}
+				Size={new UDim2(1, -114 - 100, 0, 0)}
+				Position={new UDim2(0, 114 + 100, 0, 0)}
 				TextXAlignment="Left"
 				TextYAlignment="Top"
 				BackgroundTransparency={1}

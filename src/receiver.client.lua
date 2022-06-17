@@ -16,6 +16,12 @@ if not hookfunction then
 	return
 end
 
+if not getcallingscript then
+	function getcallingscript()
+		return nil
+	end
+end
+
 local function onReceive(self, params, returns)
 	local traceback = {}
 	local callback = debug.info(4, "f") -- 1 = this, 2 = hook, 3 = C closure, 4 = caller
@@ -29,7 +35,7 @@ local function onReceive(self, params, returns)
 	end
 
 	task.defer(function()
-		local script = callback and getFunctionScript(callback)
+		local script = getcallingscript() or (callback and getFunctionScript(callback))
 		local signal = logger.createOutgoingSignal(self, script, callback, traceback, params, returns)
 		local remoteId = getInstanceId(self)
 
@@ -55,9 +61,7 @@ end)
 
 refs.InvokeServer = hookfunction(InvokeServer, function(self, ...)
 	if self and store.isActive() and typeof(self) == "Instance" and self:IsA("RemoteFunction") then
-		local results = { refs.InvokeServer(self, ...) }
-		onReceive(self, { ... }, results)
-		return unpack(results)
+		onReceive(self, { ... })
 	end
 	return refs.InvokeServer(self, ...)
 end)
@@ -65,14 +69,11 @@ end)
 refs.__namecall = hookmetamethod(game, "__namecall", function(self, ...)
 	local method = getnamecallmethod()
 
-	if store.isActive() then
-		if method == "FireServer" and IsA(self, "RemoteEvent") then
-			onReceive(self, { ... })
-		end
-
-		if method == "InvokeServer" and IsA(self, "RemoteFunction") then
-			onReceive(self, { ... })
-		end
+	if
+		(store.isActive() and method == "FireServer" and IsA(self, "RemoteEvent")) or
+		(store.isActive() and method == "InvokeServer" and IsA(self, "RemoteFunction"))
+	then
+		onReceive(self, { ... })
 	end
 
 	return refs.__namecall(self, ...)

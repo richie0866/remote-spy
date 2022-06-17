@@ -1,6 +1,7 @@
 import { OutgoingSignal, RemoteLog } from "./model";
 import { TabType } from "reducers/tab-group";
-import { getDisplayPath, getInstanceId, getSafePath } from "utils/instance-util";
+import { getInstanceId, getInstancePath } from "utils/instance-util";
+import { stringifyFunctionSignature } from "utils/function-util";
 
 let nextId = 0;
 
@@ -19,14 +20,33 @@ export function createOutgoingSignal(
 	returns?: Record<number, unknown>,
 ): OutgoingSignal {
 	return {
-		name: object.Name,
-		path: getDisplayPath(object),
-		pathFmt: getSafePath(object),
 		id: `signal-${nextId++}`,
+		remote: object,
+		remoteId: getInstanceId(object),
+		name: object.Name,
+		path: getInstancePath(object),
+		pathFmt: getInstancePath(object),
 		parameters,
 		returns,
 		caller,
 		callback,
 		traceback,
 	};
+}
+
+export function stringifySignalTraceback(signal: OutgoingSignal) {
+	const mapped = signal.traceback.map(stringifyFunctionSignature);
+	const length = mapped.size();
+
+	// Reverse order so that the remote caller is last.
+	for (let i = 0; i < length / 2; i++) {
+		const temp = mapped[i];
+		mapped[i] = mapped[length - i - 1];
+		mapped[length - i - 1] = temp;
+	}
+
+	// Highlight the remote caller.
+	mapped[length - 1] = `→ ${mapped[length - 1]} ←`;
+
+	return mapped;
 }

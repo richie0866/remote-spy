@@ -2,31 +2,25 @@ import Container from "components/Container";
 import Roact from "@rbxts/roact";
 import RowBody from "./RowBody";
 import RowHeader from "./RowHeader";
-import { OutgoingSignal } from "reducers/remote-log";
-import { pure, useBinding, useCallback, useState } from "@rbxts/roact-hooked";
+import { OutgoingSignal, toggleSignalSelected } from "reducers/remote-log";
+import { pure, useBinding, useCallback } from "@rbxts/roact-hooked";
+import { useRootDispatch } from "hooks/use-root-store";
 
 interface Props {
 	signal: OutgoingSignal;
+	selected: boolean;
 	onHeightChange: (height: number) => void;
-	onOpen: (open: boolean) => void;
 }
 
-function RowView({ signal, onHeightChange, onOpen }: Props) {
-	const [open, setOpen] = useState(false);
+function RowView({ signal, selected, onHeightChange }: Props) {
+	const dispatch = useRootDispatch();
 	const [contentHeight, setContentHeight] = useBinding(0);
 
-	const toggle = useCallback(
-		() =>
-			setOpen((open) => {
-				task.defer(() => onOpen(!open));
-				return !open;
-			}),
-		[],
-	);
+	const toggle = useCallback(() => dispatch(toggleSignalSelected(signal.remoteId, signal.id)), []);
 
 	return (
 		<>
-			<RowHeader signal={signal} open={open} onClick={toggle} />
+			<RowHeader signal={signal} open={selected} onClick={toggle} />
 
 			<Container
 				clipChildren
@@ -45,7 +39,7 @@ function RowView({ signal, onHeightChange, onOpen }: Props) {
 					Padding={new UDim()}
 					VerticalAlignment="Top"
 				/>
-				{open && <RowBody signal={signal} />}
+				{selected && <RowBody signal={signal} />}
 			</Container>
 		</>
 	);

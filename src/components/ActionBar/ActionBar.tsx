@@ -24,6 +24,7 @@ export default function ActionBar() {
 				<ActionLine />
 
 				<ActionButton id="copy" icon="rbxassetid://9887696628" />
+				<ActionButton id="save" icon="rbxassetid://9932819855" />
 				<ActionButton id="delete" icon="rbxassetid://9887696922" />
 
 				<ActionLine />

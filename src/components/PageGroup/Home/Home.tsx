@@ -1,12 +1,10 @@
-import Container from "components/Container";
 import Roact from "@rbxts/roact";
 import Row from "./Row";
-import { Instant, Spring } from "@rbxts/flipper";
-import { RunService } from "@rbxts/services";
-import { arrayToMap, useSingleMotor, useSpring } from "@rbxts/roact-hooked-plus";
-import { pure, useBinding, useEffect, useMemo, useMutable } from "@rbxts/roact-hooked";
-import { selectRemoteIdSelected, setSelectedRemoteId } from "reducers/action-bar";
-import { selectRemoteLogIds } from "reducers/remote-log/selectors";
+import Selection from "components/Selection";
+import { arrayToMap } from "@rbxts/roact-hooked-plus";
+import { pure, useEffect } from "@rbxts/roact-hooked";
+import { selectRemoteIdSelected, selectRemoteLogIds } from "reducers/remote-log";
+import { setRemoteSelected } from "reducers/remote-log";
 import { useRootDispatch, useRootSelector } from "hooks/use-root-store";
 
 interface Props {
@@ -21,29 +19,18 @@ function Home({ pageSelected }: Props) {
 	// Deselect the remote if the page is deselected.
 	useEffect(() => {
 		if (!pageSelected && selection) {
-			dispatch(setSelectedRemoteId(undefined));
+			dispatch(setRemoteSelected(undefined));
 		}
 	}, [pageSelected]);
 
 	// Deselect the remote if it is no longer in the list.
 	useEffect(() => {
 		if (selection !== undefined && !remoteLogIds.includes(selection)) {
-			dispatch(setSelectedRemoteId(undefined));
+			dispatch(setRemoteSelected(undefined));
 		}
 	}, [remoteLogIds]);
 
-	const [indicatorOffset, setIndicatorOffset] = useSingleMotor(-100);
-	const indicatorHeight = useSpring(selection === undefined ? 0 : 20, { frequency: 8 });
-	const lastSelection = useMutable(selection);
-
-	// Update the indicator offset when the selection changes.
-	useEffect(() => {
-		if (selection !== undefined) {
-			const y = remoteLogIds.indexOf(selection) * (64 + 4);
-			setIndicatorOffset(lastSelection.current === undefined ? new Instant(y) : new Spring(y, { frequency: 5 }));
-		}
-		lastSelection.current = selection;
-	}, [selection]);
+	const selectionOrder = selection !== undefined ? remoteLogIds.indexOf(selection) : -1;
 
 	return (
 		<scrollingframe
@@ -56,19 +43,11 @@ function Home({ pageSelected }: Props) {
 		>
 			<uipadding PaddingLeft={new UDim(0, 12)} PaddingRight={new UDim(0, 12)} PaddingTop={new UDim(0, 12)} />
 
-			<Container
-				size={new UDim2(0, 4, 0, 64)}
-				position={indicatorOffset.map((y) => new UDim2(0, 0, 0, math.round(y)))}
-			>
-				<frame
-					AnchorPoint={new Vector2(0, 0.5)}
-					Size={indicatorHeight.map((y) => new UDim2(0, 4, 0, y))}
-					Position={new UDim2(0, 0, 0.5, 0)}
-					BackgroundColor3={Color3.fromHex("#4CC2FF")}
-				>
-					<uicorner CornerRadius={new UDim(0, 2)} />
-				</frame>
-			</Container>
+			<Selection
+				height={64}
+				offset={selectionOrder !== -1 ? selectionOrder * (64 + 4) : undefined}
+				hasSelection={selection !== undefined}
+			/>
 
 			{arrayToMap(remoteLogIds, (id, order) => [
 				id,
@@ -77,7 +56,7 @@ function Home({ pageSelected }: Props) {
 					order={order}
 					selected={selection === id}
 					onClick={() =>
-						selection !== id ? dispatch(setSelectedRemoteId(id)) : dispatch(setSelectedRemoteId(undefined))
+						selection !== id ? dispatch(setRemoteSelected(id)) : dispatch(setRemoteSelected(undefined))
 					}
 				/>,
 			])}

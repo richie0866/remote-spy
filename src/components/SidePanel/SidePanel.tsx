@@ -14,12 +14,12 @@ function SidePanel({ [Roact.Children]: children }: Props) {
 	const [lowerHidden, setLowerHidden] = useState(false);
 	const [upperHidden, setUpperHidden] = useState(false);
 
-	const lowerAnimation = useSpring(lowerHidden ? 1 : 0, { frequency: 8 });
-	const upperAnimation = useSpring(upperHidden ? 1 : 0, { frequency: 8 });
+	const lowerAnim = useSpring(lowerHidden ? 1 : 0, { frequency: 8 });
+	const upperAnim = useSpring(upperHidden ? 1 : 0, { frequency: 8 });
 
 	const lowerSize = useMemo(
 		() =>
-			Roact.joinBindings([lowerHeight, lowerAnimation, upperAnimation]).map(([height, n, ftn]) => {
+			Roact.joinBindings([lowerHeight, lowerAnim, upperAnim]).map(([height, n, ftn]) => {
 				const lowerShown = new UDim2(1, 0, 0, height);
 				const lowerHidden = new UDim2(1, 0, 0, MIN_PANEL_HEIGHT);
 				const upperHidden = new UDim2(1, 0, 1, -MIN_PANEL_HEIGHT);
@@ -30,7 +30,7 @@ function SidePanel({ [Roact.Children]: children }: Props) {
 
 	const lowerPosition = useMemo(
 		() =>
-			Roact.joinBindings([lowerHeight, lowerAnimation, upperAnimation]).map(([height, n, ftn]) => {
+			Roact.joinBindings([lowerHeight, lowerAnim, upperAnim]).map(([height, n, ftn]) => {
 				const lowerShown = new UDim2(0, 0, 1, -height);
 				const lowerHidden = new UDim2(0, 0, 1, -MIN_PANEL_HEIGHT);
 				const upperHidden = new UDim2(0, 0, 0, MIN_PANEL_HEIGHT);
@@ -41,7 +41,7 @@ function SidePanel({ [Roact.Children]: children }: Props) {
 
 	const upperSize = useMemo(
 		() =>
-			Roact.joinBindings([lowerHeight, upperAnimation, lowerAnimation]).map(([height, n, tn]) => {
+			Roact.joinBindings([lowerHeight, upperAnim, lowerAnim]).map(([height, n, tn]) => {
 				const upperShown = new UDim2(1, 0, 1, -height);
 				const upperHidden = new UDim2(1, 0, 0, MIN_PANEL_HEIGHT);
 				const lowerHidden = new UDim2(1, 0, 1, -MIN_PANEL_HEIGHT);

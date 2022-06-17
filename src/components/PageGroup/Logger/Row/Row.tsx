@@ -3,19 +3,22 @@ import Roact from "@rbxts/roact";
 import RowView from "./RowView";
 import { OutgoingSignal } from "reducers/remote-log";
 import { Spring } from "@rbxts/flipper";
-import { pure, useBinding, useCallback } from "@rbxts/roact-hooked";
+import { pure, useBinding, useEffect } from "@rbxts/roact-hooked";
 import { useSingleMotor } from "@rbxts/roact-hooked-plus";
 
 interface Props {
 	signal: OutgoingSignal;
 	order: number;
+	selected: boolean;
 }
 
-function Row({ signal, order }: Props) {
+function Row({ signal, order, selected }: Props) {
 	const [contentHeight, setContentHeight] = useBinding(0);
 	const [animation, setGoal] = useSingleMotor(0);
 
-	const updateGoal = useCallback((open: boolean) => setGoal(new Spring(open ? 1 : 0, { frequency: 6 })), []);
+	useEffect(() => {
+		setGoal(new Spring(selected ? 1 : 0, { frequency: 6 }));
+	}, [selected]);
 
 	return (
 		<Container
@@ -25,7 +28,7 @@ function Row({ signal, order }: Props) {
 			)}
 			clipChildren
 		>
-			<RowView signal={signal} onHeightChange={setContentHeight} onOpen={updateGoal} />
+			<RowView signal={signal} onHeightChange={setContentHeight} selected={selected} />
 		</Container>
 	);
 }

@@ -42,7 +42,7 @@ function TitleBar({ caption, hidden, toggleHidden }: Props) {
 				}}
 				onPress={() => setChevronGoal(CHEVRON_PRESSED)}
 				onHover={() => setChevronGoal(CHEVRON_HOVERED)}
-				onLeave={() => setChevronGoal(CHEVRON_DEFAULT)}
+				onHoverEnd={() => setChevronGoal(CHEVRON_DEFAULT)}
 				transparency={chevronBackgroundTransparency}
 				size={new UDim2(0, 24, 0, 24)}
 				position={new UDim2(1, -8, 0, 8)}

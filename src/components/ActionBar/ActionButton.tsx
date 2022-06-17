@@ -40,7 +40,7 @@ function ActionButton({ id, icon, caption }: Props) {
 			}}
 			onPress={() => setGoal(BUTTON_PRESSED)}
 			onHover={() => setGoal(BUTTON_HOVERED)}
-			onLeave={() => setGoal(BUTTON_DEFAULT)}
+			onHoverEnd={() => setGoal(BUTTON_DEFAULT)}
 			active={!actionState.disabled}
 			size={new UDim2(0, caption !== undefined ? textSize.X + 16 + MARGIN * 3 : 36, 0, 36)}
 			transparency={backgroundTransparency}

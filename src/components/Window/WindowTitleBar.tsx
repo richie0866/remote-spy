@@ -1,3 +1,4 @@
+import Button from "components/Button";
 import Container from "components/Container";
 import Roact from "@rbxts/roact";
 import { Instant, Spring } from "@rbxts/flipper";
@@ -94,50 +95,44 @@ function WindowTitleBar({
 			/>
 
 			{/* Drag Handle */}
-			<textbutton
-				Event={{
-					MouseButton1Down: (rbx, x, y) => {
-						const mouse = new Vector2(x, y);
-						if (maximized) {
-							const currentSize = new Vector2(size.getValue().X - 46 * 3, height);
-							setStartPosition(new Vector2());
-							setDragStart(mouse.mul(currentSize.div(rbx.AbsoluteSize)));
-						} else {
-							setStartPosition(rbx.AbsolutePosition.add(TOPBAR_OFFSET));
-							setDragStart(mouse);
-						}
-					},
+			<Button
+				onPress={(rbx, x, y) => {
+					const mouse = new Vector2(x, y);
+					if (maximized) {
+						const currentSize = new Vector2(size.getValue().X - 46 * 3, height);
+						setStartPosition(new Vector2());
+						setDragStart(mouse.mul(currentSize.div(rbx.AbsoluteSize)));
+					} else {
+						setStartPosition(rbx.AbsolutePosition.add(TOPBAR_OFFSET));
+						setDragStart(mouse);
+					}
 				}}
-				Active={false}
-				Text=""
-				Size={new UDim2(1, -46 * 3, 1, 0)}
-				BackgroundTransparency={1}
-				AutoButtonColor={false}
+				active={false}
+				size={new UDim2(1, -46 * 3, 1, 0)}
 			/>
 
 			{/* Close */}
-			<imagebutton
-				Event={{
-					Activated: () => {
-						setCloseTransparency(new Spring(0, { frequency: 6 }));
-						onClose?.();
-					},
-					MouseButton1Down: () => setCloseTransparency(new Instant(0.25)),
-					MouseEnter: () => setCloseTransparency(new Spring(0, { frequency: 6 })),
-					MouseLeave: () => setCloseTransparency(new Spring(1, { frequency: 6 })),
+			<Button
+				onClick={() => {
+					setCloseTransparency(new Spring(0, { frequency: 6 }));
+					onClose?.();
 				}}
-				Image={WindowAssets.CloseButton}
-				ImageTransparency={closeTransparency}
-				ImageColor3={Color3.fromHex("#C83D3D")}
-				ScaleType="Slice"
-				SliceCenter={new Rect(8, 8, 8, 8)}
-				Size={new UDim2(0, 46, 1, 0)}
-				Position={new UDim2(1, 0, 0, 0)}
-				AnchorPoint={new Vector2(1, 0)}
-				AutoButtonColor={false}
-				BackgroundTransparency={1}
-				BorderSizePixel={0}
+				onPress={() => setCloseTransparency(new Instant(0.25))}
+				onHover={() => setCloseTransparency(new Spring(0, { frequency: 6 }))}
+				onHoverEnd={() => setCloseTransparency(new Spring(1, { frequency: 6 }))}
+				size={new UDim2(0, 46, 1, 0)}
+				position={new UDim2(1, 0, 0, 0)}
+				anchorPoint={new Vector2(1, 0)}
 			>
+				<imagelabel
+					Image={WindowAssets.CloseButton}
+					ImageTransparency={closeTransparency}
+					ImageColor3={Color3.fromHex("#C83D3D")}
+					ScaleType="Slice"
+					SliceCenter={new Rect(8, 8, 8, 8)}
+					Size={new UDim2(1, 0, 1, 0)}
+					BackgroundTransparency={1}
+				/>
 				<imagelabel
 					Image={WindowAssets.Close}
 					Size={new UDim2(0, 16, 0, 16)}
@@ -145,27 +140,22 @@ function WindowTitleBar({
 					AnchorPoint={new Vector2(0.5, 0.5)}
 					BackgroundTransparency={1}
 				/>
-			</imagebutton>
+			</Button>
 
 			{/* Maximize/Restore Down */}
-			<textbutton
-				Event={{
-					Activated: () => {
-						setMaximizeTransparency(new Spring(0.94, { frequency: 6 }));
-						setMaximized(!maximized);
-					},
-					MouseButton1Down: () => setMaximizeTransparency(new Instant(0.96)),
-					MouseEnter: () => setMaximizeTransparency(new Spring(0.94, { frequency: 6 })),
-					MouseLeave: () => setMaximizeTransparency(new Spring(1, { frequency: 6 })),
+			<Button
+				onClick={() => {
+					setMaximizeTransparency(new Spring(0.94, { frequency: 6 }));
+					setMaximized(!maximized);
 				}}
-				BackgroundTransparency={maximizeTransparency}
-				BackgroundColor3={Color3.fromHex("#FFFFFF")}
-				Size={new UDim2(0, 46, 1, 0)}
-				Position={new UDim2(1, -46, 0, 0)}
-				AnchorPoint={new Vector2(1, 0)}
-				Text=""
-				AutoButtonColor={false}
-				BorderSizePixel={0}
+				onPress={() => setMaximizeTransparency(new Instant(0.96))}
+				onHover={() => setMaximizeTransparency(new Spring(0.94, { frequency: 6 }))}
+				onHoverEnd={() => setMaximizeTransparency(new Spring(1, { frequency: 6 }))}
+				background={Color3.fromHex("#FFFFFF")}
+				transparency={maximizeTransparency}
+				size={new UDim2(0, 46, 1, 0)}
+				position={new UDim2(1, -46, 0, 0)}
+				anchorPoint={new Vector2(1, 0)}
 			>
 				<imagelabel
 					Image={maximized ? WindowAssets.RestoreDown : WindowAssets.Maximize}
@@ -174,31 +164,26 @@ function WindowTitleBar({
 					AnchorPoint={new Vector2(0.5, 0.5)}
 					BackgroundTransparency={1}
 				/>
-			</textbutton>
+			</Button>
 
 			{/* Minimize */}
-			<textbutton
-				Event={{
-					Activated: () => {
-						const viewportSize = game.GetService("Workspace").CurrentCamera?.ViewportSize;
-						if (viewportSize) {
-							setPosition(viewportSize.sub(new Vector2(42, height)));
-							if (maximized) setMaximized(false);
-						}
-						setMinimizeTransparency(new Spring(0.94, { frequency: 6 }));
-					},
-					MouseButton1Down: () => setMinimizeTransparency(new Instant(0.96)),
-					MouseEnter: () => setMinimizeTransparency(new Spring(0.94, { frequency: 6 })),
-					MouseLeave: () => setMinimizeTransparency(new Spring(1, { frequency: 6 })),
+			<Button
+				onClick={() => {
+					const viewportSize = game.GetService("Workspace").CurrentCamera?.ViewportSize;
+					if (viewportSize) {
+						setPosition(viewportSize.sub(new Vector2(42, height)));
+						if (maximized) setMaximized(false);
+					}
+					setMinimizeTransparency(new Spring(0.94, { frequency: 6 }));
 				}}
-				BackgroundTransparency={minimizeTransparency}
-				BackgroundColor3={Color3.fromHex("#FFFFFF")}
-				Size={new UDim2(0, 46, 1, 0)}
-				Position={new UDim2(1, -46 * 2, 0, 0)}
-				AnchorPoint={new Vector2(1, 0)}
-				Text=""
-				AutoButtonColor={false}
-				BorderSizePixel={0}
+				onPress={() => setMinimizeTransparency(new Instant(0.96))}
+				onHover={() => setMinimizeTransparency(new Spring(0.94, { frequency: 6 }))}
+				onHoverEnd={() => setMinimizeTransparency(new Spring(1, { frequency: 6 }))}
+				background={Color3.fromHex("#FFFFFF")}
+				transparency={minimizeTransparency}
+				size={new UDim2(0, 46, 1, 0)}
+				position={new UDim2(1, -46 * 2, 0, 0)}
+				anchorPoint={new Vector2(1, 0)}
 			>
 				<imagelabel
 					Image={WindowAssets.Minimize}
@@ -207,7 +192,7 @@ function WindowTitleBar({
 					AnchorPoint={new Vector2(0.5, 0.5)}
 					BackgroundTransparency={1}
 				/>
-			</textbutton>
+			</Button>
 
 			{children}
 		</Container>

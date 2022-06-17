@@ -1,7 +1,5 @@
 export interface ActionBarState {
 	actions: ActionBarStates;
-	selectedRemoteId?: string;
-	selectedSignalId?: string;
 }
 
 export interface ActionBarStates {
@@ -9,6 +7,7 @@ export interface ActionBarStates {
 	navigatePrevious: ActionState;
 	navigateNext: ActionState;
 	copy: ActionState;
+	save: ActionState;
 	delete: ActionState;
 	traceback: ActionState;
 	copyPath: ActionState;

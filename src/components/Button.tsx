@@ -3,7 +3,7 @@ import Roact from "@rbxts/roact";
 interface Props extends Roact.PropsWithChildren {
 	onClick?: (rbx: TextButton, inputObject: InputObject, clickCount: number) => void;
 	onHover?: (rbx: TextButton, x: number, y: number) => void;
-	onLeave?: (rbx: TextButton, x: number, y: number) => void;
+	onHoverEnd?: (rbx: TextButton, x: number, y: number) => void;
 	onPress?: (rbx: TextButton, x: number, y: number) => void;
 	onRelease?: (rbx: TextButton, x: number, y: number) => void;
 	active?: boolean | Roact.Binding<boolean>;
@@ -25,7 +25,7 @@ export default function Button(props: Props) {
 				MouseButton1Down: props.onPress,
 				MouseButton1Up: props.onRelease,
 				MouseEnter: props.onHover,
-				MouseLeave: props.onLeave,
+				MouseLeave: props.onHoverEnd,
 			}}
 			Active={props.active}
 			BackgroundColor3={props.background ?? new Color3(1, 1, 1)}
