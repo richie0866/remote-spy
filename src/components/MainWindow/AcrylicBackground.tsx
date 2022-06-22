@@ -2,7 +2,7 @@ import Acrylic from "components/Acrylic";
 import Roact from "@rbxts/roact";
 import Window from "components/Window";
 
-export default function MainWindowBackground() {
+export default function AcrylicBackground() {
 	return (
 		<Window.Background background={Color3.fromHex("#FFFFFF")} transparency={0.9}>
 			<Acrylic />
