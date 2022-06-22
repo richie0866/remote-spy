@@ -14,9 +14,9 @@ const apply = (v2: Vector2, udim: UDim2) =>
 
 function Window({ initialSize, initialPosition, [Roact.Children]: children }: Props) {
 	const viewportSize = useViewportSize();
-
 	const [size, setSize] = useBinding(apply(viewportSize.getValue(), initialSize));
 	const [position, setPosition] = useBinding(apply(viewportSize.getValue(), initialPosition));
+
 	const [maximized, setMaximized] = useState(false);
 	const maximizeAnim = useSpring(maximized ? 1 : 0, { frequency: 6 });
 

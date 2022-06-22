@@ -1,6 +1,6 @@
 import Container from "components/Container";
 import Roact from "@rbxts/roact";
-import { SIDE_PANEL_WIDTH } from "constants/app";
+import { SIDE_PANEL_WIDTH } from "constants";
 import { SidePanelContext } from "./use-side-panel-context";
 import { pure, useBinding, useMemo, useState } from "@rbxts/roact-hooked";
 import { useSpring } from "@rbxts/roact-hooked-plus";

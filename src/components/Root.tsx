@@ -1,5 +1,5 @@
 import Roact from "@rbxts/roact";
-import { DISPLAY_ORDER } from "constants/app";
+import { DISPLAY_ORDER } from "constants";
 import { Players } from "@rbxts/services";
 
 interface Props extends Roact.PropsWithChildren {
@@ -12,7 +12,7 @@ function hasCoreAccess() {
 
 function getTarget() {
 	if (gethui) {
-		return gethui(); // Script engine
+		return gethui(); // Executor
 	}
 	if (hasCoreAccess()) {
 		return game.GetService("CoreGui"); // Plugin, Command line

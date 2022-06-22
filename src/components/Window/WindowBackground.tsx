@@ -1,3 +1,4 @@
+import Container from "components/Container";
 import Roact from "@rbxts/roact";
 
 interface Props extends Roact.PropsWithChildren {
@@ -18,8 +19,11 @@ export default function WindowBackground({
 			BorderSizePixel={0}
 		>
 			<uicorner CornerRadius={new UDim(0, 8)} />
-			<uistroke Color={Color3.fromHex("#606060")} Transparency={0.5} Thickness={1} />
 			{children}
+			<Container>
+				<uicorner CornerRadius={new UDim(0, 8)} />
+				<uistroke Color={Color3.fromHex("#606060")} Transparency={0.5} Thickness={1} />
+			</Container>
 		</frame>
 	);
 }

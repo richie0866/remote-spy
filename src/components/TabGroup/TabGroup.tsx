@@ -1,6 +1,6 @@
 import Roact from "@rbxts/roact";
 import TabColumn from "./TabColumn";
-import { SIDE_PANEL_WIDTH } from "constants/app";
+import { SIDE_PANEL_WIDTH } from "constants";
 import { arrayToMap } from "@rbxts/roact-hooked-plus";
 import { getTabWidth } from "reducers/tab-group";
 import { pure, useBinding, useMemo } from "@rbxts/roact-hooked";

@@ -1,19 +1,10 @@
-local ROJO_INPUT = "RemoteSpy.rbxm"
+local MODEL_FILE = "ci/RemoteSpy.rbxm"
 local RUNTIME_FILE = "ci/runtime.lua"
 
----Configuration settings for the current project.
----@class Options
----@field output string
----@field version string
----@field debug boolean
----@field verbose boolean
+local bundleFile = ...
+local debugMode = select(2, ...) == "debug"
 
----@type Options
-local options
-
----@param object LocalScript | ModuleScript
----@param output table<number, string>
-local function writeModule(object, output)
+local function pushModule(object, output)
 	local id = object:GetFullName()
 	local source = remodel.getRawProperty(object, "Source")
 
@@ -22,30 +13,28 @@ local function writeModule(object, output)
 	local name = string.format("%q", object.Name)
 	local className = string.format("%q", object.ClassName)
 
-	if options.debug then
+	if debugMode then
 		local def = table.concat({
-			"newModule(" .. name .. ", " .. className .. ", " .. path .. ", " .. parent .. ", function ()",
+			"_module(" .. name .. ", " .. className .. ", " .. path .. ", " .. parent .. ", function ()",
 			"local fn = assert(loadstring(" .. string.format("%q", source) .. ", '@'.." .. path .. "))",
-			"setfenv(fn, newEnv(" .. path .. "))",
+			"setfenv(fn, _env(" .. path .. "))",
 			"return fn()",
 			"end)",
 		}, " ")
 		table.insert(output, def)
 	else
 		local def = table.concat({
-			"newModule(" .. name .. ", " .. className .. ", " .. path .. ", " .. parent .. ", function ()",
+			"_module(" .. name .. ", " .. className .. ", " .. path .. ", " .. parent .. ", function ()",
 			"return setfenv(function()",
 			source,
-			"end, newEnv(" .. path .. "))()",
+			"end, _env(" .. path .. "))()",
 			"end)",
 		}, " ")
 		table.insert(output, def)
 	end
 end
 
----@param object Instance
----@param output table<number, string>
-local function writeInstance(object, output)
+local function pushInstance(object, output)
 	local id = object:GetFullName()
 
 	local path = string.format("%q", id)
@@ -54,52 +43,30 @@ local function writeInstance(object, output)
 	local className = string.format("%q", object.ClassName)
 
 	local def = table.concat({
-		"newInstance(" .. name .. ", " .. className .. ", " .. path .. ", " .. parent .. ")",
+		"_instance(" .. name .. ", " .. className .. ", " .. path .. ", " .. parent .. ")",
 	}, "\n")
 	table.insert(output, def)
 end
 
----@param object LocalScript | ModuleScript
----@param output table<number, string>
-local function writeInstanceTree(object, output)
+local function pushAllInstances(object, output)
 	if object.ClassName == "LocalScript" or object.ClassName == "ModuleScript" then
-		writeModule(object, output)
+		pushModule(object, output)
 	else
-		writeInstance(object, output)
+		pushInstance(object, output)
 	end
 
 	for _, child in ipairs(object:GetChildren()) do
-		writeInstanceTree(child, output)
+		pushAllInstances(child, output)
 	end
 end
 
----Bundle the given Rojo model.
----@param opt Options
-return function (opt)
-	options = opt
+local function main()
+	local output = { remodel.readFile(RUNTIME_FILE) }
 
-	local output = {}
-	local model = remodel.readModelFile(ROJO_INPUT)[1]
+	pushAllInstances(remodel.readModelFile(MODEL_FILE)[1], output)
+	table.insert(output, "start()")
 
-	-- Add instances
-	writeInstanceTree(model, output)
-
-	-- Runtime
-	local runtimeSrc = string.gsub(
-		remodel.readFile(RUNTIME_FILE),
-		"__VERSION__",
-		options.version
-	)
-	table.insert(output, 1, runtimeSrc)
-	table.insert(output, "init()")
-
-	if options.verbose then
-		table.insert(output, 2, "local START_TIME = os.clock()")
-		table.insert(output, "print(\"[CI " .. options.version .. "] Run in \" .. (os.clock() - START_TIME) * 1000 .. \" ms\")")
-	end
-
-	-- Write to file
-	remodel.writeFile(options.output, table.concat(output, "\n\n"))
-
-	print("[CI " .. options.version .. "] Bundle written to " .. options.output)
+	remodel.writeFile(bundleFile, table.concat(output, "\n\n"))
 end
+
+main()

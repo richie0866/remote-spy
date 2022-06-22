@@ -6,6 +6,7 @@ import { OutgoingSignal, stringifySignalTraceback } from "reducers/remote-log";
 import { codify } from "utils/codify";
 import { describeFunction, stringifyFunctionSignature } from "utils/function-util";
 import { formatEscapes } from "utils/format-escapes";
+import { getInstancePath } from "utils/instance-util";
 import { pure, useMemo } from "@rbxts/roact-hooked";
 
 interface Props {
@@ -22,7 +23,11 @@ function stringifyTypesAndValues(list: Record<number, unknown>) {
 			values.push("...");
 			break;
 		}
-		types.push(typeOf(value));
+		if (typeIs(value, "Instance")) {
+			types.push(value.ClassName);
+		} else {
+			types.push(typeOf(value));
+		}
 		values.push(formatEscapes(codify(value, -1).sub(1, 256)));
 	}
 
@@ -52,6 +57,11 @@ function RowBody({ signal }: Props) {
 			>
 				<RowCaption text="Remote name" description={formatEscapes(signal.name)} wrapped />
 				<RowCaption text="Remote location" description={formatEscapes(signal.path)} wrapped />
+				<RowCaption
+					text="Remote caller"
+					description={signal.caller ? formatEscapes(getInstancePath(signal.caller)) : "No script found"}
+					wrapped
+				/>
 
 				<uipadding
 					PaddingLeft={new UDim(0, 58)}

@@ -2,10 +2,10 @@ import Roact from "@rbxts/roact";
 import { Provider } from "@rbxts/roact-rodux-hooked";
 
 import App from "components/App";
-import { IS_LOADED } from "constants/env";
+import { IS_LOADED } from "constants";
 import { changed, configureStore } from "store";
 import { getGlobal, setGlobal } from "utils/global-util";
-import { selectActionIsActive } from "reducers/action-bar";
+import { selectIsClosing } from "reducers/action-bar";
 
 if (getGlobal(IS_LOADED) === true) {
 	throw `The global ${IS_LOADED} is already defined.`;
@@ -19,15 +19,12 @@ const tree = Roact.mount(
 	</Provider>,
 );
 
-changed(
-	(state) => selectActionIsActive(state, "close"),
-	(active) => {
-		if (active) {
-			Roact.unmount(tree);
-			store.destruct();
-			setGlobal(IS_LOADED, false);
-		}
-	},
-);
+changed(selectIsClosing, (active) => {
+	if (active) {
+		Roact.unmount(tree);
+		setGlobal(IS_LOADED, false);
+		task.defer(() => store.destruct());
+	}
+});
 
 setGlobal(IS_LOADED, true);

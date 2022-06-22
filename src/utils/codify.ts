@@ -5,9 +5,7 @@ const transformers: Record<string, Callback> = {
 	string: (value: string) => string.format("%q", value.gsub("\n", "\\n")[0]),
 	number: (value: number) => tostring(value),
 	boolean: (value: boolean) => tostring(value),
-	Instance: (value: Instance) =>
-		getInstancePath(value) +
-		(value.Parent === game || value.ClassName === value.Name ? "" : " --[[" + value.ClassName + "]]"),
+	Instance: (value: Instance) => getInstancePath(value),
 	BrickColor: (value: BrickColor) => `BrickColor.new("${value.Name}")`,
 	Color3: (value: Color3) => `Color3.new(${value.R}, ${value.G}, ${value.B})`,
 	ColorSequenceKeypoint: (value: ColorSequenceKeypoint) =>

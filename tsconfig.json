@@ -16,6 +16,12 @@
 		"target": "ESNext",
 		"typeRoots": ["node_modules/@rbxts"],
 		"removeComments": true,
+		"plugins": [
+			{
+					"transform": "rbxts-transform-debug",
+					"enabled": true
+			}
+		],
 
 		// configurable
 		"rootDir": "src",

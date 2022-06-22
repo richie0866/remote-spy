@@ -133,8 +133,8 @@ function TabColumn({ tab, canvasPosition }: Props) {
 			{/* Selection background */}
 			<imagelabel
 				Image="rbxassetid://9896472554"
-				ImageTransparency={active ? 0.7 : 1}
-				ImageColor3={Color3.fromHex("#424242")}
+				ImageTransparency={active ? 0.96 : 1}
+				ImageColor3={Color3.fromHex("#FFFFFF")}
 				Size={new UDim2(1, 0, 1, 0)}
 				BackgroundTransparency={1}
 				ScaleType="Slice"
@@ -144,16 +144,16 @@ function TabColumn({ tab, canvasPosition }: Props) {
 			{/* Round out border */}
 			<imagelabel
 				Image="rbxassetid://9896472759"
-				ImageTransparency={active ? 0.7 : 1}
-				ImageColor3={Color3.fromHex("#424242")}
+				ImageTransparency={active ? 0.96 : 1}
+				ImageColor3={Color3.fromHex("#FFFFFF")}
 				Size={new UDim2(0, 5, 0, 5)}
 				Position={new UDim2(0, -5, 1, -5)}
 				BackgroundTransparency={1}
 			/>
 			<imagelabel
 				Image="rbxassetid://9896472676"
-				ImageTransparency={active ? 0.7 : 1}
-				ImageColor3={Color3.fromHex("#424242")}
+				ImageTransparency={active ? 0.96 : 1}
+				ImageColor3={Color3.fromHex("#FFFFFF")}
 				Size={new UDim2(0, 5, 0, 5)}
 				Position={new UDim2(1, 0, 1, -5)}
 				BackgroundTransparency={1}

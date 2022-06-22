@@ -33,11 +33,11 @@ jobs:
 
     - name: Bundle modules
       run: |
-        remodel run ci/bundle-prod.lua RemoteSpy.lua ${{ github.event.release.tag_name }}
-        remodel run ci/bundle-dev.lua RemoteSpy.dev.lua ${{ github.event.release.tag_name }}.dev
+        remodel run ci/bundler.lua ci/RemoteSpy.lua
+        remodel run ci/bundler.lua ci/RemoteSpy.dev.lua debug
 
     - name: Upload to release
       uses: AButler/upload-release-assets@v2.0
       with:
-        files: "RemoteSpy.lua;RemoteSpy.dev.lua;RemoteSpy.rbxm"
+        files: "ci/RemoteSpy.lua;ci/RemoteSpy.dev.lua;ci/RemoteSpy.rbxm"
         repo-token: ${{ secrets.GITHUB_TOKEN }}

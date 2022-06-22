@@ -2,7 +2,7 @@ import Button from "components/Button";
 import Container from "components/Container";
 import Roact from "@rbxts/roact";
 import { Instant, Spring } from "@rbxts/flipper";
-import { TOPBAR_OFFSET } from "constants/app";
+import { TOPBAR_OFFSET } from "constants";
 import { UserInputService } from "@rbxts/services";
 import { WindowAssets } from "./assets";
 import { pure, useBinding, useEffect, useState } from "@rbxts/roact-hooked";

@@ -5,6 +5,8 @@ local getFunctionScript = TS.import(script, script.Parent, "utils", "function-ut
 local getInstanceId = TS.import(script, script.Parent, "utils", "instance-util").getInstanceId
 local makeSelectRemoteLog = TS.import(script, script.Parent, "reducers", "remote-log", "selectors").makeSelectRemoteLog
 
+local CALLER_STACK_LEVEL = if KRNL_LOADED then 6 else 4
+
 local FireServer = Instance.new("RemoteEvent").FireServer
 local InvokeServer = Instance.new("RemoteFunction").InvokeServer
 local IsA = game.IsA
@@ -24,7 +26,7 @@ end
 
 local function onReceive(self, params, returns)
 	local traceback = {}
-	local callback = debug.info(4, "f") -- 1 = this, 2 = hook, 3 = C closure, 4 = caller
+	local callback = debug.info(CALLER_STACK_LEVEL, "f")
 
 	local level, fn = 4, callback
 

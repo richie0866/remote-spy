@@ -29,39 +29,37 @@ function ActionBarEffects() {
 
 	useActionEffect("copy", () => {
 		if (remote) {
-			setclipboard ? setclipboard(getInstancePath(remote.object)) : print("Copy", getInstancePath(remote.object));
+			setclipboard?.(getInstancePath(remote.object));
 		} else if (signal) {
-			setclipboard
-				? setclipboard(codifyOutgoingSignal(signal))
-				: print("Copy", "\n" + codifyOutgoingSignal(signal));
+			setclipboard?.(codifyOutgoingSignal(signal));
 		}
 	});
 
 	useActionEffect("copyPath", () => {
 		const object = remote?.object ?? (currentTab && getInstanceFromId(currentTab.id));
 		if (object) {
-			setclipboard ? setclipboard(getInstancePath(object)) : print("Copy", getInstancePath(object));
+			setclipboard?.(getInstancePath(object));
 		}
 	});
 
 	useActionEffect("save", () => {
 		if (remote) {
-			const [remoteName] = getInstancePath(remote.object).sub(-48, -1).gsub("[^a-zA-Z0-9]+", "_");
+			const [remoteName] = getInstancePath(remote.object).sub(-66, -1).gsub("[^a-zA-Z0-9]+", "_");
 
-			const fileName = `${remote.object.ClassName}_${remoteName}.txt`;
+			const fileName = `${remoteName}.txt`;
 			const fileContents = stringifyRemote(remote);
 
-			writefile ? writefile(fileName, fileContents) : print("Save", fileName, "\n" + fileContents);
+			writefile?.(fileName, fileContents);
 		} else if (signal) {
 			const remote = selectRemoteLog(store.getState(), signal.remoteId)!;
 			const signalOrder = remote.outgoing.findIndex((s) => s.id === signal.id);
 
-			const [remoteName] = getInstancePath(remote.object).sub(-48, -1).gsub("[^a-zA-Z0-9]+", "_");
+			const [remoteName] = getInstancePath(remote.object).sub(-66, -1).gsub("[^a-zA-Z0-9]+", "_");
 
-			const fileName = `${remote.object.ClassName}_${remoteName}_Signal${signalOrder + 1}.txt`;
+			const fileName = `${remoteName}_Signal${signalOrder + 1}.txt`;
 			const fileContents = stringifyRemote(remote, (s) => signal.id === s.id);
 
-			writefile ? writefile(fileName, fileContents) : print("Save", fileName, "\n" + fileContents);
+			writefile?.(fileName, fileContents);
 		}
 	});
 
