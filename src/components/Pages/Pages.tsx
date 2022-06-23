@@ -3,10 +3,11 @@ import Roact from "@rbxts/roact";
 import { SIDE_PANEL_WIDTH } from "constants";
 import { arrayToMap } from "@rbxts/roact-hooked-plus";
 import { pure } from "@rbxts/roact-hooked";
-import { useTabs } from "components/TabGroup";
+import { selectTabs } from "reducers/tab-group";
+import { useRootSelector } from "hooks/use-root-store";
 
-function PageGroup() {
-	const tabs = useTabs();
+function Pages() {
+	const tabs = useRootSelector(selectTabs);
 
 	return (
 		<frame
@@ -22,4 +23,4 @@ function PageGroup() {
 	);
 }
 
-export default pure(PageGroup);
+export default pure(Pages);

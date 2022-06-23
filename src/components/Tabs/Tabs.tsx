@@ -1,13 +1,13 @@
 import Roact from "@rbxts/roact";
-import TabColumn from "./TabColumn";
+import Tab from "./Tab";
 import { SIDE_PANEL_WIDTH } from "constants";
 import { arrayToMap } from "@rbxts/roact-hooked-plus";
-import { getTabWidth } from "reducers/tab-group";
+import { getTabWidth, selectTabs } from "reducers/tab-group";
 import { pure, useBinding, useMemo } from "@rbxts/roact-hooked";
-import { useTabs } from "./use-tab-group";
+import { useRootSelector } from "hooks/use-root-store";
 
-function TabGroup() {
-	const tabs = useTabs();
+function Tabs() {
+	const tabs = useRootSelector(selectTabs);
 	const [canvasPosition, setCanvasPosition] = useBinding(new Vector2());
 
 	const totalWidth = useMemo(() => {
@@ -29,9 +29,9 @@ function TabGroup() {
 			BorderSizePixel={0}
 		>
 			<uipadding PaddingLeft={new UDim(0, 12)} />
-			{arrayToMap(tabs, (tab) => [tab.id, <TabColumn tab={tab} canvasPosition={canvasPosition} />])}
+			{arrayToMap(tabs, (tab) => [tab.id, <Tab tab={tab} canvasPosition={canvasPosition} />])}
 		</scrollingframe>
 	);
 }
 
-export default pure(TabGroup);
+export default pure(Tabs);

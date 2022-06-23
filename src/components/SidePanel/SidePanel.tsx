@@ -1,5 +1,7 @@
 import Container from "components/Container";
+import FunctionTree from "./FunctionTree";
 import Roact from "@rbxts/roact";
+import Traceback from "./Traceback";
 import { SIDE_PANEL_WIDTH } from "constants";
 import { SidePanelContext } from "./use-side-panel-context";
 import { pure, useBinding, useMemo, useState } from "@rbxts/roact-hooked";
@@ -7,9 +9,7 @@ import { useSpring } from "@rbxts/roact-hooked-plus";
 
 const MIN_PANEL_HEIGHT = 40;
 
-interface Props extends Roact.PropsWithChildren {}
-
-function SidePanel({ [Roact.Children]: children }: Props) {
+function SidePanel() {
 	const [lowerHeight, setLowerHeight] = useBinding(200);
 	const [lowerHidden, setLowerHidden] = useState(false);
 	const [upperHidden, setUpperHidden] = useState(false);
@@ -68,7 +68,8 @@ function SidePanel({ [Roact.Children]: children }: Props) {
 				size={new UDim2(0, SIDE_PANEL_WIDTH, 1, -84)}
 				position={new UDim2(1, 0, 0, 84)}
 			>
-				{children}
+				<FunctionTree />
+				<Traceback />
 			</Container>
 		</SidePanelContext.Provider>
 	);

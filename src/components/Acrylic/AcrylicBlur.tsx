@@ -8,7 +8,7 @@ interface Props {
 	distance?: number;
 }
 
-function AcrylicImpl({ distance = 0.001 }: Props) {
+function AcrylicBlur({ distance = 0.001 }: Props) {
 	const positions = useMutable({
 		topLeft: Vector2.zero,
 		topRight: Vector2.zero,
@@ -93,4 +93,4 @@ function AcrylicImpl({ distance = 0.001 }: Props) {
 	);
 }
 
-export default pure(AcrylicImpl);
+export default pure(AcrylicBlur);

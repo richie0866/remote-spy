@@ -1,11 +1,18 @@
-import Acrylic from "components/Acrylic";
+import Acrylic from "./Acrylic";
+import Container from "components/Container";
 import Roact from "@rbxts/roact";
-import Window from "components/Window";
 
-export default function AcrylicBackground() {
+export default function AcrylicPaint() {
 	return (
-		<Window.Background background={Color3.fromHex("#FFFFFF")} transparency={0.9}>
+		<frame
+			Size={new UDim2(1, 0, 1, 0)}
+			BackgroundColor3={Color3.fromHex("#FFFFFF")}
+			BackgroundTransparency={0.9}
+			BorderSizePixel={0}
+		>
 			<Acrylic />
+
+			<uicorner CornerRadius={new UDim(0, 8)} />
 
 			<frame
 				BackgroundColor3={Color3.fromHex("#1C1F28")}
@@ -50,6 +57,11 @@ export default function AcrylicBackground() {
 			>
 				<uicorner CornerRadius={new UDim(0, 8)} />
 			</imagelabel>
-		</Window.Background>
+
+			<Container>
+				<uicorner CornerRadius={new UDim(0, 8)} />
+				<uistroke Color={Color3.fromHex("#606060")} Transparency={0.5} Thickness={1} />
+			</Container>
+		</frame>
 	);
 }

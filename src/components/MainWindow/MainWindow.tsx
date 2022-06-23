@@ -1,12 +1,10 @@
-import AcrylicBackground from "./AcrylicBackground";
+import Acrylic from "components/Acrylic";
 import ActionBar from "components/ActionBar";
-import FunctionTree from "components/FunctionTree";
-import PageGroup from "components/PageGroup";
+import Pages from "components/Pages";
 import Roact from "@rbxts/roact";
 import Root from "components/Root";
 import SidePanel from "components/SidePanel";
-import TabGroup from "components/TabGroup";
-import Traceback from "components/Traceback";
+import Tabs from "components/Tabs";
 import Window from "components/Window";
 import { activateAction } from "reducers/action-bar";
 import { pure } from "@rbxts/roact-hooked";
@@ -19,16 +17,13 @@ function MainWindow() {
 		<Root>
 			<Window.Root initialSize={new UDim2(0, 1080, 0, 700)} initialPosition={new UDim2(0.5, -540, 0.5, -350)}>
 				<Window.DropShadow />
-				<AcrylicBackground />
+				<Acrylic.Paint />
 
 				<ActionBar />
-				<TabGroup />
-				<PageGroup />
+				<SidePanel />
 
-				<SidePanel.Root>
-					<Traceback />
-					<FunctionTree />
-				</SidePanel.Root>
+				<Tabs />
+				<Pages />
 
 				<Window.TitleBar
 					onClose={() => dispatch(activateAction("close"))}

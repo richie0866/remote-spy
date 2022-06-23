@@ -2,24 +2,28 @@ import Button from "components/Button";
 import Container from "components/Container";
 import Roact from "@rbxts/roact";
 import { Instant, Spring } from "@rbxts/flipper";
-import { MAX_TAB_CAPTION_WIDTH, TabGroupColumn, deleteTab, getTabCaptionWidth, getTabWidth } from "reducers/tab-group";
+import {
+	MAX_TAB_CAPTION_WIDTH,
+	TabGroupColumn,
+	deleteTab,
+	getTabCaptionWidth,
+	getTabWidth,
+	makeSelectTabOffset,
+	moveTab,
+	selectTabIsActive,
+	setActiveTab,
+} from "reducers/tab-group";
 import { RunService, UserInputService } from "@rbxts/services";
 import { formatEscapes } from "utils/format-escapes";
 import { pure, useBinding, useEffect, useMemo, useState } from "@rbxts/roact-hooked";
 import { tabIcons } from "./constants";
-import { useDeleteTab, useMoveTab, useSetActiveTab, useTabIsActive, useTabOffset, useTabWidth } from "./use-tab-group";
-import { useRootStore } from "hooks/use-root-store";
+import { useDraggableTab } from "./use-draggable-tab";
+import { useRootDispatch, useRootSelector, useRootStore } from "hooks/use-root-store";
 import { useSingleMotor, useSpring } from "@rbxts/roact-hooked-plus";
 
 interface Props {
 	tab: TabGroupColumn;
 	canvasPosition: Roact.Binding<Vector2>;
-}
-
-interface DragState {
-	dragging: boolean;
-	mousePosition: number;
-	tabPosition: number;
 }
 
 const FOREGROUND_ACTIVE = new Instant(0);
@@ -30,19 +34,18 @@ const CLOSE_DEFAULT = new Spring(1, { frequency: 6 });
 const CLOSE_HOVERED = new Spring(0.9, { frequency: 6 });
 const CLOSE_PRESSED = new Instant(0.94);
 
-function TabColumn({ tab, canvasPosition }: Props) {
-	const store = useRootStore();
-
-	// Rodux state
-	const active = useTabIsActive(tab.id);
-	const width = useTabWidth(tab);
-	const offset = useTabOffset(tab.id);
+function Tab({ tab, canvasPosition }: Props) {
+	const dispatch = useRootDispatch();
+	const width = useMemo(() => getTabWidth(tab), [tab]);
 	const captionWidth = useMemo(() => getTabCaptionWidth(tab), [tab]);
 
-	// Dispatchers
-	const activate = useSetActiveTab(tab.id);
-	const move = useMoveTab(tab.id);
-	const close = useDeleteTab(tab.id);
+	// State
+	const selectTabOffset = useMemo(makeSelectTabOffset, []);
+	const active = useRootSelector((state) => selectTabIsActive(state, tab.id));
+	const offset = useRootSelector((state) => selectTabOffset(state, tab.id));
+
+	// Dragging
+	const [dragPosition, setDragState] = useDraggableTab(tab.id, width, canvasPosition);
 
 	// Animation
 	const [foreground, setForeground] = useSingleMotor(active ? 0 : 0.4);
@@ -53,63 +56,10 @@ function TabColumn({ tab, canvasPosition }: Props) {
 		setForeground(active ? FOREGROUND_ACTIVE : FOREGROUND_DEFAULT);
 	}, [active]);
 
-	// Dragging
-	const [dragState, setDragState] = useState<DragState>();
-	const [dragPosition, setDragPosition] = useBinding<number | undefined>(undefined);
-
-	useEffect(() => {
-		if (!dragState) return;
-
-		const estimateNewIndex = (dragOffset: number) => {
-			let totalWidth = 0;
-
-			for (const t of tabs) {
-				totalWidth += getTabWidth(t);
-
-				if (totalWidth > dragOffset + width / 2) {
-					return tabs.indexOf(t);
-				}
-			}
-
-			return tabs.size() - 1;
-		};
-
-		const tabs = store.getState().tabGroup.tabs;
-		const startCanvasPosition = canvasPosition.getValue();
-
-		let lastIndex = estimateNewIndex(0);
-
-		const mouseMoved = RunService.Heartbeat.Connect(() => {
-			const current = UserInputService.GetMouseLocation();
-			const position = current.X - dragState.mousePosition + dragState.tabPosition;
-			const canvasDelta = canvasPosition.getValue().X - startCanvasPosition.X;
-
-			setDragPosition(position + canvasDelta);
-
-			const newIndex = estimateNewIndex(position + canvasDelta);
-			if (newIndex !== lastIndex) {
-				lastIndex = newIndex;
-				move(newIndex);
-			}
-		});
-
-		const mouseUp = UserInputService.InputEnded.Connect((input) => {
-			if (input.UserInputType === Enum.UserInputType.MouseButton1) {
-				setDragState(undefined);
-				setDragPosition(undefined);
-			}
-		});
-
-		return () => {
-			mouseMoved.Disconnect();
-			mouseUp.Disconnect();
-		};
-	}, [dragState]);
-
 	return (
 		<Button
 			onPress={(_, x) => {
-				if (!active) activate();
+				if (!active) dispatch(setActiveTab(tab.id));
 				setDragState({
 					dragging: false,
 					mousePosition: x,
@@ -196,10 +146,7 @@ function TabColumn({ tab, canvasPosition }: Props) {
 				{/* Close button */}
 				{tab.canClose && (
 					<Button
-						onClick={() => {
-							deleteTab(tab.id);
-							close();
-						}}
+						onClick={() => dispatch(deleteTab(tab.id))}
 						onPress={() => setCloseBackground(CLOSE_PRESSED)}
 						onHover={() => setCloseBackground(CLOSE_HOVERED)}
 						onHoverEnd={() => setCloseBackground(CLOSE_DEFAULT)}
@@ -232,4 +179,4 @@ function TabColumn({ tab, canvasPosition }: Props) {
 	);
 }
 
-export default pure(TabColumn);
+export default pure(Tab);

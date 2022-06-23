@@ -1,4 +1,4 @@
-import AcrylicImpl from "./AcrylicImpl";
+import AcrylicBlur from "./AcrylicBlur";
 import Roact from "@rbxts/roact";
 import { IS_ACRYLIC_ENABLED } from "constants";
 
@@ -10,5 +10,5 @@ export default function Acrylic({ distance }: Props) {
 	if (!IS_ACRYLIC_ENABLED) {
 		return <></>;
 	}
-	return <AcrylicImpl distance={distance} />;
+	return <AcrylicBlur distance={distance} />;
 }
