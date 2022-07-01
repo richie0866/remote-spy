@@ -29,7 +29,7 @@
     "@rbxts/make": "^1.0.6",
     "@rbxts/object-utils": "^1.0.4",
     "@rbxts/roact": "^1.4.0-ts.2",
-    "@rbxts/roact-hooked": "^2.0.1",
+    "@rbxts/roact-hooked": "^2.0.3",
     "@rbxts/roact-hooked-plus": "^1.2.0",
     "@rbxts/roact-rodux-hooked": "^1.1.1",
     "@rbxts/rodux": "^3.0.0-ts.3",

@@ -1,6 +1,8 @@
 import Roact from "@rbxts/roact";
 
-export default function withCollection<T extends Roact.AnyComponent, U extends Record<string, Roact.AnyComponent>>(
+type AnyComponent = Roact.FunctionComponent<any> | Roact.ComponentConstructor<any>;
+
+export default function withCollection<T extends AnyComponent, U extends Record<string, AnyComponent>>(
 	component: T,
 	collection: U,
 ): T & U {
