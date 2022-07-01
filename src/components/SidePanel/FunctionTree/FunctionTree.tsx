@@ -1,8 +1,8 @@
 import Container from "components/Container";
 import Roact from "@rbxts/roact";
 import TitleBar from "../components/TitleBar";
-import { pure } from "@rbxts/roact-hooked";
 import { useSidePanelContext } from "../use-side-panel-context";
+import { withHooksPure } from "@rbxts/roact-hooked";
 
 function FunctionTree() {
 	const { setUpperHidden, upperHidden, upperSize } = useSidePanelContext();
@@ -21,4 +21,4 @@ function FunctionTree() {
 	);
 }
 
-export default pure(FunctionTree);
+export default withHooksPure(FunctionTree);

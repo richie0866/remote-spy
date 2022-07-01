@@ -1,11 +1,11 @@
 import App from "./App";
 import Roact from "@rbxts/roact";
-import { Provider } from "@rbxts/roact-rodux-hooked";
+import { StoreProvider } from "@rbxts/roact-rodux-hooked";
 import { configureStore } from "store";
 import { createOutgoingSignal, createRemoteLog, pushOutgoingSignal, pushRemoteLog } from "reducers/remote-log";
 import { getInstanceId } from "utils/instance-util";
-import { pure } from "@rbxts/roact-hooked";
 import { useRootDispatch } from "hooks/use-root-store";
+import { withHooksPure } from "@rbxts/roact-hooked";
 
 const rng = new Random();
 
@@ -17,7 +17,7 @@ function topLevelCaller(x?: number, y?: number, z?: number) {
 	testFnCaller();
 }
 
-const Dispatcher = pure(() => {
+const Dispatcher = withHooksPure(() => {
 	const dispatch = useRootDispatch();
 
 	const names = [
@@ -75,13 +75,13 @@ const Dispatcher = pure(() => {
 
 export = (target: Frame) => {
 	const handle = Roact.mount(
-		<Provider store={configureStore()}>
+		<StoreProvider store={configureStore()}>
 			{/* <Root>
 				<imagelabel Image="rbxassetid://9897110309" Size={new UDim2(1, 0, 1, 0)} ScaleType="Crop" />
 			</Root> */}
 			<Dispatcher />
 			<App />
-		</Provider>,
+		</StoreProvider>,
 		target,
 		"App",
 	);

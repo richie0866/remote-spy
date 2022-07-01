@@ -13,8 +13,7 @@
 	"plugins": [
 		"@typescript-eslint",
 		"roblox-ts",
-		"prettier",
-		"sort-imports-es6-autofix"
+		"prettier"
 	],
 	"extends": [
 		"eslint:recommended",
@@ -24,14 +23,6 @@
 	],
 	"rules": {
 		"prettier/prettier": "warn",
-		"roblox-ts/no-namespace-merging": "off",
-		"sort-imports-es6-autofix/sort-imports-es6": [
-			"warn",
-			{
-				"ignoreCase": false,
-				"ignoreMemberSort": false,
-				"memberSyntaxSortOrder": ["none", "all", "single", "multiple"]
-			}
-		]
+		"roblox-ts/no-namespace-merging": "off"
 	}
 }

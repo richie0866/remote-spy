@@ -3,7 +3,7 @@ import Roact from "@rbxts/roact";
 import RowView from "./RowView";
 import { OutgoingSignal } from "reducers/remote-log";
 import { Spring } from "@rbxts/flipper";
-import { pure, useBinding, useEffect } from "@rbxts/roact-hooked";
+import { useBinding, useEffect, withHooksPure } from "@rbxts/roact-hooked";
 import { useSingleMotor } from "@rbxts/roact-hooked-plus";
 
 interface Props {
@@ -33,4 +33,4 @@ function Row({ signal, order, selected }: Props) {
 	);
 }
 
-export default pure(Row);
+export default withHooksPure(Row);

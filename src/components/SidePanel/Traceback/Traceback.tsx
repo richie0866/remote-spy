@@ -1,8 +1,8 @@
 import Container from "components/Container";
 import Roact from "@rbxts/roact";
 import TitleBar from "../components/TitleBar";
-import { pure } from "@rbxts/roact-hooked";
 import { useSidePanelContext } from "../use-side-panel-context";
+import { withHooksPure } from "@rbxts/roact-hooked";
 
 function Traceback() {
 	const { lowerHidden, setLowerHidden, lowerSize, lowerPosition } = useSidePanelContext();
@@ -14,4 +14,4 @@ function Traceback() {
 	);
 }
 
-export default pure(Traceback);
+export default withHooksPure(Traceback);

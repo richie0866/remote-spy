@@ -3,7 +3,7 @@ import Roact from "@rbxts/roact";
 import RowBody from "./RowBody";
 import RowHeader from "./RowHeader";
 import { OutgoingSignal, toggleSignalSelected } from "reducers/remote-log";
-import { pure, useBinding, useCallback } from "@rbxts/roact-hooked";
+import { useBinding, useCallback, withHooksPure } from "@rbxts/roact-hooked";
 import { useRootDispatch } from "hooks/use-root-store";
 
 interface Props {
@@ -45,4 +45,4 @@ function RowView({ signal, selected, onHeightChange }: Props) {
 	);
 }
 
-export default pure(RowView);
+export default withHooksPure(RowView);

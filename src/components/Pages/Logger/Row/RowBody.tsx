@@ -7,7 +7,7 @@ import { codify } from "utils/codify";
 import { describeFunction, stringifyFunctionSignature } from "utils/function-util";
 import { formatEscapes } from "utils/format-escapes";
 import { getInstancePath } from "utils/instance-util";
-import { pure, useMemo } from "@rbxts/roact-hooked";
+import { useMemo, withHooksPure } from "@rbxts/roact-hooked";
 
 interface Props {
 	signal: OutgoingSignal;
@@ -135,4 +135,4 @@ function RowBody({ signal }: Props) {
 	);
 }
 
-export default pure(RowBody);
+export default withHooksPure(RowBody);

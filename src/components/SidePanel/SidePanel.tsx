@@ -4,7 +4,7 @@ import Roact from "@rbxts/roact";
 import Traceback from "./Traceback";
 import { SIDE_PANEL_WIDTH } from "constants";
 import { SidePanelContext } from "./use-side-panel-context";
-import { pure, useBinding, useMemo, useState } from "@rbxts/roact-hooked";
+import { useBinding, useMemo, useState, withHooksPure } from "@rbxts/roact-hooked";
 import { useSpring } from "@rbxts/roact-hooked-plus";
 
 const MIN_PANEL_HEIGHT = 40;
@@ -75,4 +75,4 @@ function SidePanel() {
 	);
 }
 
-export default pure(SidePanel);
+export default withHooksPure(SidePanel);

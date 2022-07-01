@@ -1,6 +1,6 @@
 import Container from "components/Container";
 import Roact from "@rbxts/roact";
-import { pure } from "@rbxts/roact-hooked";
+import { withHooksPure } from "@rbxts/roact-hooked";
 
 function Script() {
 	return (
@@ -16,4 +16,4 @@ function Script() {
 	);
 }
 
-export default pure(Script);
+export default withHooksPure(Script);

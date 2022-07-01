@@ -7,8 +7,8 @@ import SidePanel from "components/SidePanel";
 import Tabs from "components/Tabs";
 import Window from "components/Window";
 import { activateAction } from "reducers/action-bar";
-import { pure } from "@rbxts/roact-hooked";
 import { useRootDispatch } from "hooks/use-root-store";
+import { withHooksPure } from "@rbxts/roact-hooked";
 
 function MainWindow() {
 	const dispatch = useRootDispatch();
@@ -37,4 +37,4 @@ function MainWindow() {
 	);
 }
 
-export default pure(MainWindow);
+export default withHooksPure(MainWindow);

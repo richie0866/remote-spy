@@ -3,7 +3,7 @@ import Tab from "./Tab";
 import { SIDE_PANEL_WIDTH } from "constants";
 import { arrayToMap } from "@rbxts/roact-hooked-plus";
 import { getTabWidth, selectTabs } from "reducers/tab-group";
-import { pure, useBinding, useMemo } from "@rbxts/roact-hooked";
+import { useBinding, useMemo, withHooksPure } from "@rbxts/roact-hooked";
 import { useRootSelector } from "hooks/use-root-store";
 
 function Tabs() {
@@ -34,4 +34,4 @@ function Tabs() {
 	);
 }
 
-export default pure(Tabs);
+export default withHooksPure(Tabs);

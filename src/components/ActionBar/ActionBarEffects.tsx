@@ -8,10 +8,10 @@ import {
 	selectRemoteIdSelected,
 	selectSignalSelected,
 } from "reducers/remote-log";
-import { pure, useEffect } from "@rbxts/roact-hooked";
 import { removeRemoteLog } from "reducers/remote-log";
 import { setActionEnabled } from "reducers/action-bar";
 import { useActionEffect } from "hooks/use-action-effect";
+import { useEffect, withHooksPure } from "@rbxts/roact-hooked";
 import { useRootDispatch, useRootSelector, useRootStore } from "hooks/use-root-store";
 
 const selectRemoteLog = makeSelectRemoteLog();
@@ -89,4 +89,4 @@ function ActionBarEffects() {
 	return <></>;
 }
 
-export default pure(ActionBarEffects);
+export default withHooksPure(ActionBarEffects);

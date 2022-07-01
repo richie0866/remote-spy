@@ -6,8 +6,8 @@ import { clearOutgoingSignals } from "reducers/remote-log";
 import { formatEscapes } from "utils/format-escapes";
 import { getInstancePath } from "utils/instance-util";
 import { makeSelectRemoteLogObject, makeSelectRemoteLogType } from "reducers/remote-log";
-import { pure, useMemo } from "@rbxts/roact-hooked";
 import { useGroupMotor } from "@rbxts/roact-hooked-plus";
+import { useMemo, withHooksPure } from "@rbxts/roact-hooked";
 import { useRootDispatch, useRootSelector } from "hooks/use-root-store";
 
 interface Props {
@@ -125,4 +125,4 @@ function Header({ id }: Props) {
 	);
 }
 
-export default pure(Header);
+export default withHooksPure(Header);

@@ -5,7 +5,7 @@ import Roact from "@rbxts/roact";
 import Script from "./Script";
 import { Instant, Spring } from "@rbxts/flipper";
 import { TabType, selectActiveTabId, selectActiveTabOrder, selectTabOrder, selectTabType } from "reducers/tab-group";
-import { pure, useEffect, useMutable } from "@rbxts/roact-hooked";
+import { useEffect, useMutable, withHooksPure } from "@rbxts/roact-hooked";
 import { useRootSelector } from "hooks/use-root-store";
 import { useSingleMotor } from "@rbxts/roact-hooked-plus";
 
@@ -52,4 +52,4 @@ function Page({ id }: Props) {
 	);
 }
 
-export default pure(Page);
+export default withHooksPure(Page);

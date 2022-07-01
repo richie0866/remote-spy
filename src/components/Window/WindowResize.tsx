@@ -2,7 +2,7 @@ import Button from "components/Button";
 import Container from "components/Container";
 import Roact from "@rbxts/roact";
 import { UserInputService } from "@rbxts/services";
-import { pure, useEffect, useState } from "@rbxts/roact-hooked";
+import { useEffect, useState, withHooksPure } from "@rbxts/roact-hooked";
 import { useWindowContext } from "./use-window-context";
 
 const THICKNESS = 14;
@@ -132,4 +132,4 @@ function WindowResize({ minSize = new Vector2(250, 250), maxSize = new Vector2(2
 	);
 }
 
-export default pure(WindowResize);
+export default withHooksPure(WindowResize);

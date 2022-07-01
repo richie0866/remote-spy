@@ -3,8 +3,8 @@ import Roact from "@rbxts/roact";
 import { ActionBarStates, activateAction, selectActionById } from "reducers/action-bar";
 import { Instant, Spring } from "@rbxts/flipper";
 import { TextService } from "@rbxts/services";
-import { pure, useMemo } from "@rbxts/roact-hooked";
 import { useGroupMotor } from "@rbxts/roact-hooked-plus";
+import { useMemo, withHooksPure } from "@rbxts/roact-hooked";
 import { useRootDispatch, useRootSelector } from "hooks/use-root-store";
 
 const MARGIN = 10;
@@ -75,4 +75,4 @@ function ActionButton({ id, icon, caption }: Props) {
 	);
 }
 
-export default pure(ActionButton);
+export default withHooksPure(ActionButton);

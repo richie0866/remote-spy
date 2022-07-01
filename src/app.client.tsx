@@ -1,5 +1,5 @@
 import Roact from "@rbxts/roact";
-import { Provider } from "@rbxts/roact-rodux-hooked";
+import { StoreProvider } from "@rbxts/roact-rodux-hooked";
 
 import App from "components/App";
 import { IS_LOADED } from "constants";
@@ -14,9 +14,9 @@ if (getGlobal(IS_LOADED) === true) {
 const store = configureStore();
 
 const tree = Roact.mount(
-	<Provider store={store}>
+	<StoreProvider store={store}>
 		<App />
-	</Provider>,
+	</StoreProvider>,
 );
 
 changed(selectIsClosing, (active) => {

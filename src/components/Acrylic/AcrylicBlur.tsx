@@ -2,7 +2,7 @@ import Roact from "@rbxts/roact";
 import { Workspace } from "@rbxts/services";
 import { createAcrylic } from "./create-acrylic";
 import { getOffset, viewportPointToWorld } from "./utils";
-import { pure, useCallback, useEffect, useMemo, useMutable } from "@rbxts/roact-hooked";
+import { useCallback, useEffect, useMemo, useMutable, withHooksPure } from "@rbxts/roact-hooked";
 
 interface Props {
 	distance?: number;
@@ -93,4 +93,4 @@ function AcrylicBlur({ distance = 0.001 }: Props) {
 	);
 }
 
-export default pure(AcrylicBlur);
+export default withHooksPure(AcrylicBlur);

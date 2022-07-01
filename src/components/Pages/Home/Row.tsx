@@ -6,7 +6,7 @@ import { formatEscapes } from "utils/format-escapes";
 import { getInstancePath } from "utils/instance-util";
 import { makeSelectRemoteLogObject, makeSelectRemoteLogOutgoing, makeSelectRemoteLogType } from "reducers/remote-log";
 import { multiply } from "utils/number-util";
-import { pure, useCallback, useMemo, useMutable } from "@rbxts/roact-hooked";
+import { useCallback, useMemo, useMutable, withHooksPure } from "@rbxts/roact-hooked";
 import { useGroupMotor, useSpring } from "@rbxts/roact-hooked-plus";
 import { useRootSelector, useRootStore } from "hooks/use-root-store";
 
@@ -162,4 +162,4 @@ function Row({ onClick, id, order, selected }: Props) {
 	);
 }
 
-export default pure(Row);
+export default withHooksPure(Row);

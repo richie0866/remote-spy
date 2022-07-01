@@ -1,8 +1,8 @@
 import Button from "components/Button";
 import Roact from "@rbxts/roact";
 import { Instant, Spring } from "@rbxts/flipper";
-import { pure } from "@rbxts/roact-hooked";
 import { useGroupMotor } from "@rbxts/roact-hooked-plus";
+import { withHooksPure } from "@rbxts/roact-hooked";
 
 interface Props {
 	caption: string;
@@ -61,4 +61,4 @@ function TitleBar({ caption, hidden, toggleHidden }: Props) {
 	);
 }
 
-export default pure(TitleBar);
+export default withHooksPure(TitleBar);

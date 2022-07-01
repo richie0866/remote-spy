@@ -15,8 +15,8 @@ import {
 } from "reducers/tab-group";
 import { RunService, UserInputService } from "@rbxts/services";
 import { formatEscapes } from "utils/format-escapes";
-import { pure, useBinding, useEffect, useMemo, useState } from "@rbxts/roact-hooked";
 import { tabIcons } from "./constants";
+import { useBinding, useEffect, useMemo, useState, withHooksPure } from "@rbxts/roact-hooked";
 import { useDraggableTab } from "./use-draggable-tab";
 import { useRootDispatch, useRootSelector, useRootStore } from "hooks/use-root-store";
 import { useSingleMotor, useSpring } from "@rbxts/roact-hooked-plus";
@@ -179,4 +179,4 @@ function Tab({ tab, canvasPosition }: Props) {
 	);
 }
 
-export default pure(Tab);
+export default withHooksPure(Tab);

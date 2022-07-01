@@ -1,7 +1,7 @@
 import Roact from "@rbxts/roact";
 import { WindowContext } from "./use-window-context";
 import { lerp } from "utils/number-util";
-import { pure, useBinding, useMemo, useState } from "@rbxts/roact-hooked";
+import { useBinding, useMemo, useState, withHooksPure } from "@rbxts/roact-hooked";
 import { useSpring, useViewportSize } from "@rbxts/roact-hooked-plus";
 
 interface Props extends Roact.PropsWithChildren {
@@ -50,4 +50,4 @@ function Window({ initialSize, initialPosition, [Roact.Children]: children }: Pr
 	);
 }
 
-export default pure(Window);
+export default withHooksPure(Window);

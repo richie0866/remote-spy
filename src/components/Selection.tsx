@@ -1,7 +1,7 @@
 import Container from "./Container";
 import Roact from "@rbxts/roact";
 import { Instant, Linear, Spring } from "@rbxts/flipper";
-import { pure, useBinding, useEffect } from "@rbxts/roact-hooked";
+import { useBinding, useEffect, withHooksPure } from "@rbxts/roact-hooked";
 import { useSingleMotor, useSpring } from "@rbxts/roact-hooked-plus";
 
 interface Props {
@@ -70,4 +70,4 @@ function Selection({ height, offset, hasSelection }: Props) {
 	);
 }
 
-export default pure(Selection);
+export default withHooksPure(Selection);

@@ -5,7 +5,7 @@ import { Instant, Spring } from "@rbxts/flipper";
 import { TOPBAR_OFFSET } from "constants";
 import { UserInputService } from "@rbxts/services";
 import { WindowAssets } from "./assets";
-import { pure, useBinding, useEffect, useState } from "@rbxts/roact-hooked";
+import { useBinding, useEffect, useState, withHooksPure } from "@rbxts/roact-hooked";
 import { useSingleMotor } from "@rbxts/roact-hooked-plus";
 import { useWindowContext } from "./use-window-context";
 
@@ -199,4 +199,4 @@ function WindowTitleBar({
 	);
 }
 
-export default pure(WindowTitleBar);
+export default withHooksPure(WindowTitleBar);

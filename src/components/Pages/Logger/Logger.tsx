@@ -5,7 +5,7 @@ import Row from "./Row";
 import Selection from "components/Selection";
 import { arrayToMap } from "@rbxts/roact-hooked-plus";
 import { makeSelectRemoteLogOutgoing, selectSignalIdSelected } from "reducers/remote-log";
-import { pure, useBinding, useMemo } from "@rbxts/roact-hooked";
+import { useBinding, useMemo, withHooksPure } from "@rbxts/roact-hooked";
 import { useRootSelector } from "hooks/use-root-store";
 
 interface Props {
@@ -67,4 +67,4 @@ function Logger({ id }: Props) {
 	);
 }
 
-export default pure(Logger);
+export default withHooksPure(Logger);

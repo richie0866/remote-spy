@@ -2,9 +2,9 @@ import Roact from "@rbxts/roact";
 import Row from "./Row";
 import Selection from "components/Selection";
 import { arrayToMap } from "@rbxts/roact-hooked-plus";
-import { pure, useEffect } from "@rbxts/roact-hooked";
 import { selectRemoteIdSelected, selectRemoteLogIds } from "reducers/remote-log";
 import { setRemoteSelected } from "reducers/remote-log";
+import { useEffect, withHooksPure } from "@rbxts/roact-hooked";
 import { useRootDispatch, useRootSelector } from "hooks/use-root-store";
 
 interface Props {
@@ -64,4 +64,4 @@ function Home({ pageSelected }: Props) {
 	);
 }
 
-export default pure(Home);
+export default withHooksPure(Home);

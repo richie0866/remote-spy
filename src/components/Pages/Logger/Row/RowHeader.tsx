@@ -5,9 +5,9 @@ import { OutgoingSignal } from "reducers/remote-log";
 import { formatEscapes } from "utils/format-escapes";
 import { getInstancePath } from "utils/instance-util";
 import { multiply } from "utils/number-util";
-import { pure } from "@rbxts/roact-hooked";
 import { stringifyFunctionSignature } from "utils/function-util";
 import { useGroupMotor } from "@rbxts/roact-hooked-plus";
+import { withHooksPure } from "@rbxts/roact-hooked";
 
 interface Props {
 	signal: OutgoingSignal;
@@ -113,4 +113,4 @@ function RowHeader({ signal, open, onClick }: Props) {
 	);
 }
 
-export default pure(RowHeader);
+export default withHooksPure(RowHeader);
