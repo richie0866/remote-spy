@@ -149,13 +149,11 @@ function WindowTitleBar({ caption, icon = "rbxassetid://9886659555", onClose }: 
 			{/* Minimize Button */}
 			<Button
 				onClick={() => {
-					const viewportSize = game.GetService("Workspace").CurrentCamera?.ViewportSize;
+					const viewportSize = game.GetService("Workspace").CurrentCamera!.ViewportSize;
 
-					if (viewportSize) {
-						// TODO: Fully support minimize
-						window.setPosition(viewportSize.sub(new Vector2(42, 42)));
-						window.setMaximized(false);
-					}
+					// TODO: Fully support minimize
+					window.setPosition(viewportSize.sub(new Vector2(42, 42)));
+					window.setMaximized(false);
 
 					setMinimizeMotor(new Spring(0.94, { frequency: 6 }));
 				}}

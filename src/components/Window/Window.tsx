@@ -3,7 +3,7 @@ import { useBinding, useMemo, useState, withHooksPure } from "@rbxts/roact-hooke
 import { useSpring, useViewportSize } from "@rbxts/roact-hooked-plus";
 import Container from "components/Container";
 import applyUDim2 from "util/applyUDim2";
-import lerp from "util/math/lerp";
+import { lerp } from "util/numberUtil";
 import withCollection from "util/withCollection";
 import { WindowContext } from "./useWindowContext";
 import WindowDropShadow from "./WindowDropShadow";

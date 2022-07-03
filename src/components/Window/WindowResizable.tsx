@@ -29,14 +29,12 @@ function WindowResizable({ minSize = new Vector2(300, 250), maxSize = new Vector
 		(initialSize: Vector2, mouseDelta: Vector2) => {
 			const { direction } = resizeState!;
 
-			const targetSize = initialSize.add(direction.mul(mouseDelta));
 			const newSize = new Vector2(
-				math.clamp(targetSize.X, minSize.X, maxSize.X),
-				math.clamp(targetSize.Y, minSize.Y, maxSize.Y),
+				math.clamp(initialSize.X + direction.X * mouseDelta.X, minSize.X, maxSize.X),
+				math.clamp(initialSize.Y + direction.Y * mouseDelta.Y, minSize.Y, maxSize.Y),
 			);
 
 			window.setSize(newSize);
-
 			return newSize;
 		},
 		[resizeState],
