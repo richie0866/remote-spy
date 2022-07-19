@@ -31,7 +31,7 @@ function Button(props: ButtonProps) {
 				MouseLeave: props.onMouseLeave,
 			}}
 			Active={props.active}
-			BackgroundColor3={props.background ?? Color3.fromHex("#FFFFFF")}
+			BackgroundColor3={props.background || Color3.fromHex("#FFFFFF")}
 			BackgroundTransparency={props.transparency ?? 1}
 			Size={props.size}
 			Position={props.position}

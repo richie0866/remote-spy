@@ -11,30 +11,20 @@ interface ButtonIconProps extends Roact.PropsWithChildren {
 	anchorPoint?: Vector2 | Roact.Binding<Vector2>;
 }
 
-export default function ButtonIcon({
-	icon,
-	scaleType,
-	sliceCenter,
-	transparency,
-	color,
-	size,
-	position = new UDim2(0.5, 0, 0.5, 0),
-	anchorPoint = new Vector2(0.5, 0.5),
-	[Roact.Children]: children,
-}: ButtonIconProps) {
+export default function ButtonIcon(props: ButtonIconProps) {
 	return (
 		<imagelabel
-			Image={icon}
-			ImageColor3={color}
-			ImageTransparency={transparency}
-			SliceCenter={sliceCenter}
-			ScaleType={scaleType}
-			Size={size}
-			Position={position}
-			AnchorPoint={anchorPoint}
+			Image={props.icon}
+			ImageColor3={props.color}
+			ImageTransparency={props.transparency}
+			SliceCenter={props.sliceCenter}
+			ScaleType={props.scaleType}
+			Size={props.size}
+			Position={props.position || new UDim2(0.5, 0, 0.5, 0)}
+			AnchorPoint={props.anchorPoint || new Vector2(0.5, 0.5)}
 			BackgroundTransparency={1}
 		>
-			{children}
+			{props[Roact.Children]}
 		</imagelabel>
 	);
 }
