@@ -2,7 +2,8 @@
 	"name": "RemoteSpy",
 	"globIgnorePaths": [
 		"**/package.json",
-		"**/tsconfig.json"
+		"**/tsconfig.json",
+		"**/stories/**"
 	],
 	"tree": {
 		"$path": "out",

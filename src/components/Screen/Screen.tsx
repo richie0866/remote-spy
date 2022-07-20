@@ -5,7 +5,7 @@ interface ScreenProps extends Roact.PropsWithChildren {
 	displayOrder?: number;
 }
 
-export const MIN_DISPLAY_ORDER = 6;
+const MIN_DISPLAY_ORDER = 6;
 
 export default function Screen({ displayOrder = 0, [Roact.Children]: children }: ScreenProps) {
 	return (
