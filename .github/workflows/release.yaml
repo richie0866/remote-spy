@@ -27,14 +27,10 @@ jobs:
       run: |
         npm run compile
 
-    - name: Build model
+    - name: Bundle module
       run: |
-        npm run build
-
-    - name: Bundle modules
-      run: |
-        remodel run ci/bundler.lua ci/RemoteSpy.lua
-        remodel run ci/bundler.lua ci/RemoteSpy.dev.lua debug
+        npm run bundle
+        npm run bundle:dev
 
     - name: Upload to release
       uses: AButler/upload-release-assets@v2.0

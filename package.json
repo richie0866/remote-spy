@@ -6,8 +6,8 @@
     "watch": "npx rbxtsc -w",
     "build": "rojo build default.project.json --output \"ci/RemoteSpy.rbxm\"",
     "serve": "rojo serve place.project.json",
-    "bundle": "npm run build && remodel run ci/bundler.lua ci/RemoteSpy.dev.lua",
-    "bundle:dbg": "npm run build && remodel run ci/bundler.lua ci/RemoteSpy.dev.lua debug"
+    "bundle": "sh ci/bundle-prod.sh",
+    "bundle:dev": "sh ci/bundle-dev.sh"
   },
   "devDependencies": {
     "@rbxts/compiler-types": "^1.3.3-types.1",

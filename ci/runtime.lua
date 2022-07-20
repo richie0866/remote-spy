@@ -4,7 +4,7 @@
 --
 -- Author: 0866
 -- License: MIT
--- GitHub: https://github.com/richie0866/remote-spy
+-- GitHub: https://github.com/richie0866/remote-spy/
 --]]
 
 local instanceFromId = {}
@@ -59,15 +59,19 @@ local function loadModule(object, caller)
 	return data
 end
 
-local function start()
-	if not game:IsLoaded() then
-		game.Loaded:Wait()
-	end
-
+local function startImpl()
 	for object in pairs(modules) do
 		if object:IsA("LocalScript") and not object.Disabled then
 			task.defer(loadModule, object)
 		end
+	end
+end
+
+local function start()
+	if game:IsLoaded() then
+		startImpl()
+	else
+		game.Loaded:Once(startImpl)
 	end
 end
 

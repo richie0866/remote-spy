@@ -62,8 +62,8 @@ end
 
 local function main()
 	local output = { remodel.readFile(RUNTIME_FILE) }
-
 	pushAllInstances(remodel.readModelFile(MODEL_FILE)[1], output)
+
 	table.insert(output, "start()")
 
 	remodel.writeFile(bundleFile, table.concat(output, "\n\n"))
