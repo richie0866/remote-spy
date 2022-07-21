@@ -22,14 +22,14 @@ export function ribbonItemPressed(itemType: RibbonItemType) {
 
 export function ribbonItemEnabled(itemType: RibbonItemType) {
 	return {
-		type: "ribbon/ENABLE_ITEM",
+		type: "ribbon/ITEM_ENABLED",
 		itemType,
 	} as const;
 }
 
 export function ribbonItemDisabled(itemType: RibbonItemType) {
 	return {
-		type: "ribbon/DISABLE_ITEM",
+		type: "ribbon/ITEM_DISABLED",
 		itemType,
 	} as const;
 }

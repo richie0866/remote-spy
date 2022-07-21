@@ -1,6 +1,8 @@
 import Roact from "@rbxts/roact";
+import Outline from "components/Outline";
 import Ribbon from "components/Ribbon";
 import Screen from "components/Screen";
+import Traffic from "components/Traffic";
 import Window from "components/Window";
 
 export default function App() {
@@ -10,6 +12,8 @@ export default function App() {
 				<Window.DropShadow />
 				<Window.Paint />
 				<Ribbon />
+				<Outline />
+				<Traffic />
 				<Window.TitleBar
 					icon="rbxassetid://9886981409"
 					caption={`RemoteSpy    <font color="#B2B2B2">${PKG_VERSION}</font>`}

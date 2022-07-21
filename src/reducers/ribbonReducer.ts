@@ -37,6 +37,24 @@ const initialState: RibbonState = {
 
 export default function ribbonReducer(state = initialState, action: RibbonAction): RibbonState {
 	switch (action.type) {
+		case "ribbon/ITEM_ENABLED":
+			return {
+				items: {
+					...state.items,
+					[action.itemType]: {
+						status: RibbonStatus.ENABLED,
+					},
+				},
+			};
+		case "ribbon/ITEM_DISABLED":
+			return {
+				items: {
+					...state.items,
+					[action.itemType]: {
+						status: RibbonStatus.DISABLED,
+					},
+				},
+			};
 		default:
 			return state;
 	}

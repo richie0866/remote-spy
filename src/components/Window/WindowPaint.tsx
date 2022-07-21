@@ -9,7 +9,7 @@ export default function WindowPaint() {
 			BackgroundTransparency={0.9}
 			BorderSizePixel={0}
 		>
-			<uicorner CornerRadius={new UDim(0, 8)} />
+			<uicorner CornerRadius={new UDim(0, 11)} />
 
 			<frame
 				BackgroundColor3={Color3.fromHex("#1C1F28")}
@@ -17,7 +17,7 @@ export default function WindowPaint() {
 				Size={new UDim2(1, 0, 1, 0)}
 				BorderSizePixel={0}
 			>
-				<uicorner CornerRadius={new UDim(0, 8)} />
+				<uicorner CornerRadius={new UDim(0, 11)} />
 			</frame>
 
 			<frame
@@ -26,7 +26,7 @@ export default function WindowPaint() {
 				Size={new UDim2(1, 0, 1, 0)}
 				BorderSizePixel={0}
 			>
-				<uicorner CornerRadius={new UDim(0, 8)} />
+				<uicorner CornerRadius={new UDim(0, 11)} />
 				<uigradient
 					Color={new ColorSequence(Color3.fromHex("#252221"), Color3.fromHex("#171515"))}
 					Rotation={90}
@@ -41,7 +41,7 @@ export default function WindowPaint() {
 				Size={new UDim2(1, 0, 1, 0)}
 				BackgroundTransparency={1}
 			>
-				<uicorner CornerRadius={new UDim(0, 8)} />
+				<uicorner CornerRadius={new UDim(0, 11)} />
 			</imagelabel>
 
 			<imagelabel
@@ -52,11 +52,11 @@ export default function WindowPaint() {
 				Size={new UDim2(1, 0, 1, 0)}
 				BackgroundTransparency={1}
 			>
-				<uicorner CornerRadius={new UDim(0, 8)} />
+				<uicorner CornerRadius={new UDim(0, 11)} />
 			</imagelabel>
 
 			<Container>
-				<uicorner CornerRadius={new UDim(0, 8)} />
+				<uicorner CornerRadius={new UDim(0, 11)} />
 				<uistroke Color={Color3.fromHex("#606060")} Transparency={0.5} Thickness={1} />
 			</Container>
 		</frame>

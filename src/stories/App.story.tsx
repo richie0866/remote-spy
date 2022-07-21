@@ -1,12 +1,13 @@
 import Roact from "@rbxts/roact";
+import { StoreProvider } from "@rbxts/roact-rodux-hooked";
 import App from "components/App";
-import RoduxProvider from "providers/RoduxProvider";
+import configureStore from "configureStore";
 
 export = (target: Frame) => {
 	const tree = Roact.mount(
-		<RoduxProvider>
+		<StoreProvider store={configureStore()}>
 			<App />
-		</RoduxProvider>,
+		</StoreProvider>,
 		target,
 		"App",
 	);
