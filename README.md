@@ -1,6 +1,6 @@
 ## ⚡ RemoteSpy
 
-An incomplete and detected remote spy written in Roact and Roblox-TS.
+An incomplete remote spy written in Roact and Roblox-TS.
 
 Archived and published for anyone to fork or use.
 
