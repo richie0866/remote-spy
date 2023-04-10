@@ -1,6 +1,8 @@
 ## ⚡ RemoteSpy
 
-An incomplete and detected remote spy written in Roact and Roblox-TS
+An incomplete and detected remote spy written in Roact and Roblox-TS.
+
+Archived and published for public use.
 
 ```lua
 loadstring(game:HttpGetAsync("https://github.com/richie0866/remote-spy/releases/latest/download/RemoteSpy.lua"))()
