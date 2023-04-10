@@ -2,7 +2,7 @@
 
 An incomplete and detected remote spy written in Roact and Roblox-TS.
 
-Archived and published for public use.
+Archived and published for anyone to fork or use.
 
 ```lua
 loadstring(game:HttpGetAsync("https://github.com/richie0866/remote-spy/releases/latest/download/RemoteSpy.lua"))()
